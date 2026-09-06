@@ -44,6 +44,9 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
+                <button onclick="openUrlConfigModal()" class="px-3 py-1.5 text-xs bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-gear"></i> Setting URL Drive
+                </button>
                 <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass"></i> Cek Status
                 </button>
@@ -384,25 +387,64 @@
         </div>
     </div>
 
+    <!-- MODAL SETTING URL APPS SCRIPT -->
+    <div id="urlConfigModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeUrlConfigModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-base font-bold text-blue-950 mb-2"><i class="fa-solid fa-link text-amber-600"></i> Pengaturan Web App URL Google Drive</h3>
+            <p class="text-xs text-gray-600 mb-4">Masukkan URL Web App dari Google Apps Script yang sudah Anda Deploy agar berkas & data terkirim langsung ke Google Drive & Google Sheets panitia.</p>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Web App URL (Google Apps Script):</label>
+                    <input type="url" id="inputAppsScriptUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-3 py-2 text-xs border rounded-lg outline-none focus:ring-2 focus:ring-amber-500">
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="saveAppsScriptUrl()" class="flex-1 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 transition">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan URL
+                    </button>
+                    <button onclick="closeUrlConfigModal()" class="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-300 transition">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Application Logic -->
     <script>
         // =========================================================================
-        // TEMPELKAN URL APPS SCRIPT DI SINI (SATU KALI UNTUK SEMUA PENDAFTAR)
+        // TEMPELKAN URL APPS SCRIPT DI SINI ATAU MELALUI MENU SETTING DI NAVBAR
         // =========================================================================
-        const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdjBCMnZJi28xfH-BPg4z359zd1c_JdO-4_iCKqCwMC6iK7qqkGWz0VM5HncM2NlyA/exec"; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
+        const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxvsD1RGn_2hXZoh85MtAUECAmVNi3shylqTJNckI24FmRcJC-THBXfE3ScIVkDX4z/exec"; 
         
-        let googleAppsScriptUrl = DEFAULT_PANITIA_SCRIPT_URL;
+        function getScriptUrl() {
+            return localStorage.getItem('spmb_script_url') || DEFAULT_PANITIA_SCRIPT_URL;
+        }
 
-        // Form Step Navigation
-        function nextStep(stepNumber) {
-            // Validation step 1
-            if (stepNumber === 2) {
-                const req1 = ['namaSiswa', 'nisn', 'nikSiswa', 'jenisKelamin', 'tempatLahir', 'tanggalLahir', 'agama', 'asalSekolah', 'alamatLengkap'];
-                for (let id of req1) {
-                    if (!document.getElementById(id).value.trim()) {
-                        Swal.fire('Mohon Lengkapi', 'Silakan isi seluruh kolom data siswa sebelum melanjutkan.', 'warning');
-                        return;
-                    }
+        function openUrlConfigModal() {
+            document.getElementById('inputAppsScriptUrl').value = getScriptUrl();
+            document.getElementById('urlConfigModal').classList.remove('hidden');
+        }
+
+        function closeUrlConfigModal() {
+            document.getElementById('urlConfigModal').classList.add('hidden');
+        }
+
+        function saveAppsScriptUrl() {
+            const url = document.getElementById('inputAppsScriptUrl').value.trim();
+            if (!url) {
+                Swal.fire('Peringatan', 'Harap masukkan URL Google Apps Script.', 'warning');
+                return;
+            }
+            if (!url.startsWith('https://script.google.com/macros/s/')) {
+                Swal.fire('Format URL Salah', 'URL Web App harus diawali dengan https://script.google.com/macros/s/ dan diakhiri dengan /exec', 'error');
+                return;
+            }
+            localStorage.setItem('spmb_script_url', url);
+            Swal.fire('Berhasil Disimpan', 'URL Google Apps Script berhasil dihubungkan!', 'success');
+            closeUrlConfigModal();
+        }
                 }
             }
             // Validation step 2
@@ -488,6 +530,20 @@
         async function handleFormSubmit(event) {
             event.preventDefault();
 
+            const scriptUrl = getScriptUrl();
+
+            if (!scriptUrl) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'URL Google Apps Script Belum Diisi!',
+                    text: 'Aplikasi belum terhubung ke Google Drive. Klik tombol "Setting URL Drive" di pojok kanan atas dan masukkan URL Web App dari Google Apps Script Anda.',
+                    confirmButtonText: 'Buka Setting URL Drive'
+                }).then(() => {
+                    openUrlConfigModal();
+                });
+                return;
+            }
+
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses & Mengirim ke Drive...';
@@ -547,27 +603,23 @@
                 const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
                 formData.regNo = regNo;
 
-                // Send via fetch to Google Apps Script Backend if URL exists
-                if (googleAppsScriptUrl) {
-                    await fetch(googleAppsScriptUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify(formData)
-                    });
-                }
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(formData)
+                });
 
                 // Store local record for receipt/lookup
                 const existingRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
-                formData.regNo = regNo;
                 formData.tglDaftar = new Date().toLocaleDateString('id-ID');
                 existingRecords.push(formData);
                 localStorage.setItem('spmb_records', JSON.stringify(existingRecords));
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'Pendaftaran Berhasil!',
-                    text: 'Formulir dan berkas Anda telah terinput otomatis ke Google Drive SMP Farter Mamasa.',
+                    title: 'Pendaftaran Berhasil Terkirim!',
+                    text: 'Formulir dan berkas Anda telah diproses dan dikirim ke Google Drive & Spreadsheet Panitia.',
                     confirmButtonText: 'Cetak Bukti Pendaftaran'
                 }).then(() => {
                     showReceipt(formData);
