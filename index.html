@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openCheckStatusModal()" class="px-4 py-2 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow transition flex items-center gap-2">
+                <button type="button" onclick="openCheckStatusModal()" class="px-4 py-2 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow transition flex items-center gap-2">
                     <i class="fa-solid fa-magnifying-glass"></i> Cek Status Pendaftaran
                 </button>
             </div>
@@ -479,9 +479,10 @@
         <p class="text-blue-300 mt-1">Sistem Pendaftaran Terkoneksi Langsung ke Google Drive & Google Sheets Panitia SPMB</p>
     </footer>
 
+    <!-- RECEIPT MODAL -->
     <div id="receiptModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
-            <button onclick="closeReceiptModal()" class="no-print absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <button type="button" onclick="closeReceiptModal()" class="no-print absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-2xl"></i></button>
             
             <div id="printableFormArea" class="p-4 border sm:p-8 bg-white text-black text-xs leading-relaxed">
                 <!-- Kop Surat Official -->
@@ -570,23 +571,24 @@
             </div>
 
             <div class="no-print flex flex-col sm:flex-row gap-2 mt-4 pt-3 border-t">
-                <button onclick="window.print()" class="flex-1 py-2.5 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition flex items-center justify-center gap-2">
+                <button type="button" onclick="window.print()" class="flex-1 py-2.5 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-print text-sm"></i> Cetak / Download PDF Formulir
                 </button>
-                <button onclick="closeReceiptModal()" class="px-5 py-2.5 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-300 transition">
+                <button type="button" onclick="closeReceiptModal()" class="px-5 py-2.5 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-300 transition">
                     Tutup
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- CHECK STATUS MODAL -->
     <div id="checkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-            <button onclick="closeCheckStatusModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <button type="button" onclick="closeCheckStatusModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h3 class="text-base font-bold text-blue-950 mb-2"><i class="fa-solid fa-magnifying-glass text-blue-600"></i> Cek Status Pendaftaran</h3>
             <p class="text-xs text-gray-600 mb-4">Masukkan NISN atau Nomor Registrasi pendaftaran Anda.</p>
             <input type="text" id="checkNisnInput" placeholder="Contoh: 10 digit NISN / SPMB-2026-xxx" class="w-full px-3 py-2 text-sm border rounded-lg outline-none mb-3">
-            <button onclick="performCheckStatus()" class="w-full py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition">Cari Pendaftaran</button>
+            <button type="button" onclick="performCheckStatus()" class="w-full py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition">Cari Pendaftaran</button>
             <div id="checkResult" class="mt-4 text-xs hidden"></div>
         </div>
     </div>
@@ -595,10 +597,6 @@
         const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxvsD1RGn_2hXZoh85MtAUECAmVNi3shylqTJNckI24FmRcJC-THBXfE3ScIVkDX4z/exec"; 
         
         let isSubmitting = false;
-
-        function getScriptUrl() {
-            return DEFAULT_PANITIA_SCRIPT_URL;
-        }
 
         function nextStep(stepNumber) {
             if (stepNumber === 2) {
@@ -725,23 +723,20 @@
             });
         }
 
-       function generateFormHTML(data, photoBase64) {
-  const photoHtml = photoBase64 
-    ? `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;" />`
-    : `<<foto>>`;
+        function generateFormulirHTML(data, photoBase64) {
+            const photoHtml = photoBase64 
+                ? `<img src="data:image/jpeg;base64,${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;" />`
+                : `Pas Foto`;
 
-  return `<!DOCTYPE html>
+            return `<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Formulir Pendaftaran - ${data.nama}</title>
+<title>Formulir Pendaftaran - ${data.namaSiswa}</title>
 <style>
-    @page { size: A4; margin: 15mm 15mm 15mm 15mm; }
+    @page { size: A4; margin: 15mm; }
     body { font-family: "Times New Roman", Times, serif; font-size: 11pt; line-height: 1.35; color: #000; margin: 0; padding: 20px; }
-    
     .page-break { page-break-before: always; padding-top: 20px; }
-    
-    /* Header Layout */
     .header-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 5px; }
     .header-logo { width: 75px; text-align: center; vertical-align: middle; }
     .header-logo img { width: 70px; height: 70px; }
@@ -751,31 +746,20 @@
     .header-text p { margin: 1px 0; font-size: 8.5pt; }
     .header-photo { width: 75px; text-align: right; vertical-align: middle; }
     .photo-box { width: 70px; height: 90px; border: 1px solid #000; display: inline-block; text-align: center; line-height: 90px; font-size: 9pt; vertical-align: middle; }
-
-    /* Title */
     .doc-title { text-align: center; margin: 10px 0 15px 0; }
     .doc-title h3 { margin: 0; font-size: 11pt; font-weight: bold; text-transform: uppercase; }
     .no-form-box { display: inline-block; border: 1px solid #000; padding: 2px 20px; margin-top: 5px; font-weight: bold; font-size: 10pt; min-width: 180px; text-align: center; }
-
-    /* Content Styling */
     .section-title { font-weight: bold; margin-top: 10px; margin-bottom: 5px; font-size: 11pt; }
     table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
     table.data-table td { vertical-align: top; padding: 2px 0; font-size: 10.5pt; }
-    
-    .line-field { border-bottom: 1px solid #000; display: inline-block; min-width: 150px; }
-    
-    /* Signatures */
     .sig-container { width: 100%; margin-top: 25px; border-collapse: collapse; }
     .sig-container td { text-align: center; vertical-align: top; font-size: 10.5pt; }
-
     .statement-text { text-align: justify; font-size: 10.5pt; line-height: 1.4; margin-top: 10px; }
     .statement-list { margin: 5px 0 10px 20px; padding: 0; font-size: 10.5pt; }
     .statement-list li { margin-bottom: 3px; text-align: justify; }
 </style>
 </head>
 <body>
-
-    <!-- KOP HEADER -->
     <table class="header-table">
         <tr>
             <td class="header-logo">
@@ -793,126 +777,86 @@
         </tr>
     </table>
 
-    <!-- JUDUL FORMULIR -->
     <div class="doc-title">
-        <h3>FORMULIR PENDAFTARAN SISWA BARU TAHUN PELAJARAN 2027/2028</h3>
-        <div class="no-form-box">Nomor Formulir : ${data.no_registrasi || ''}</div>
+        <h3>FORMULIR PENDAFTARAN SISWA BARU TAHUN PELAJARAN 2026/2027</h3>
+        <div class="no-form-box">Nomor Formulir : ${data.regNo}</div>
     </div>
 
-    <!-- A. KETERANGAN CALON SISWA -->
     <div class="section-title">A. KETERANGAN CALON SISWA :</div>
     <table class="data-table">
-        <tr><td width="30%">1. Nama sesuai Akta / Ijazah</td><td width="2%">:</td><td width="68%"><b>${data.nama || ''}</b></td></tr>
-        <tr><td>2. Jenis Kelamin</td><td>:</td><td>${data.jk || ''}</td></tr>
-        <tr><td>3. Tempat / Tanggal Lahir</td><td>:</td><td>${data.tempat_lahir || ''}, ${data.tanggal_lahir || ''}</td></tr>
-        <tr><td>4. Agama</td><td>:</td><td>${data.agama || ''}</td></tr>
-        <tr><td>5. Kewarganegaraan</td><td>:</td><td>${data.kewarganegaraan || 'Indonesia'}</td></tr>
+        <tr><td width="30%">1. Nama sesuai Akta / Ijazah</td><td width="2%">:</td><td width="68%"><b>${data.namaSiswa}</b></td></tr>
+        <tr><td>2. Jenis Kelamin</td><td>:</td><td>${data.jenisKelamin}</td></tr>
+        <tr><td>3. Tempat / Tanggal Lahir</td><td>:</td><td>${data.tempatLahir}, ${data.tanggalLahir}</td></tr>
+        <tr><td>4. Agama</td><td>:</td><td>${data.agama}</td></tr>
+        <tr><td>5. Kewarganegaraan</td><td>:</td><td>${data.kewarganegaraan}</td></tr>
         <tr>
             <td>6. Anak ke</td>
             <td>:</td>
-            <td>${data.anak_ke || '-'} &nbsp;&nbsp;&nbsp;&nbsp; Jumlah Saudara Kandung : ${data.saudara_kandung || '0'} orang<br>
-                Jumlah Saudara Angkat : ${data.saudara_angkat || '0'} orang &nbsp;&nbsp;&nbsp;&nbsp; Jumlah Saudara Tiri : ${data.saudara_tiri || '0'} orang
+            <td>${data.anakKe} &nbsp;&nbsp;&nbsp;&nbsp; Jumlah Saudara Kandung : ${data.saudaraKandung} orang<br>
+                Jumlah Saudara Angkat : ${data.saudaraAngkat} orang &nbsp;&nbsp;&nbsp;&nbsp; Jumlah Saudara Tiri : ${data.saudaraTiri} orang
             </td>
         </tr>
-        <tr><td>7. Bahasa sehari – hari</td><td>:</td><td>${data.bahasa || '-'}</td></tr>
-        <tr><td>8. Alamat Rumah</td><td>:</td><td>${data.alamat || ''}</td></tr>
-        <tr><td>9. Telepon / HP</td><td>:</td><td>${data.telepon || '-'}/ ${data.hp || ''}</td></tr>
-        <tr><td>10. Bertempat tinggal pada</td><td>:</td><td>${data.tempat_tinggal || 'Orang Tua'}</td></tr>
-        <tr><td>11. Jarak dari tempat tinggal ke sekolah</td><td>:</td><td>${data.jarak || '0'} Km</td></tr>
-        <tr><td>12. Ke sekolah dengan kendaraan</td><td>:</td><td>${data.transportasi || '-'}</td></tr>
-        <tr>
-            <td>13. Keadaan Jasmani :</td>
-            <td></td>
-            <td></td>
-        </tr>
+        <tr><td>7. Bahasa sehari – hari</td><td>:</td><td>${data.bahasa}</td></tr>
+        <tr><td>8. Alamat Rumah</td><td>:</td><td>${data.alamatLengkap}</td></tr>
+        <tr><td>9. Telepon / HP</td><td>:</td><td>${data.noWhatsapp}</td></tr>
+        <tr><td>10. Bertempat tinggal pada</td><td>:</td><td>${data.bertempatTinggal}</td></tr>
+        <tr><td>11. Jarak dari tempat tinggal ke sekolah</td><td>:</td><td>${data.jarakSekolah} Km</td></tr>
+        <tr><td>12. Ke sekolah dengan kendaraan</td><td>:</td><td>${data.kendaraan}</td></tr>
+        <tr><td colspan="3">13. Keadaan Jasmani :</td></tr>
         <tr>
             <td colspan="3" style="padding-left: 20px;">
-                a. Golongan Darah : ${data.gol_darah || '-'}<br>
-                b. Tinggi Badan : ${data.tinggi_badan || '-'} Cm<br>
-                c. Berat Badan : ${data.berat_badan || '-'} Kg<br>
-                d. Penyakit yang pernah diderita : ${data.penyakit || 'Tidak Ada'}
+                a. Golongan Darah : ${data.golDarah}<br>
+                b. Tinggi Badan : ${data.tinggiBadan} Cm<br>
+                c. Berat Badan : ${data.beratBadan} Kg<br>
+                d. Penyakit yang pernah diderita : ${data.penyakit}
             </td>
         </tr>
-        <tr>
-            <td>14. Asal mula sekolah anak :</td>
-            <td></td>
-            <td></td>
-        </tr>
+        <tr><td colspan="3">14. Asal mula sekolah anak :</td></tr>
         <tr>
             <td colspan="3" style="padding-left: 20px;">
-                Dari SD : <b>${data.sekolah_asal || ''}</b><br>
-                Alamat SD / SMP : ${data.alamat_sekolah || '-'}<br>
-                Nomor dan Tahun Ijazah SD : ${data.no_ijazah || '-'}, ${data.tahun_ijazah || '-'}<br>
-                Pindahan dari SD / SMP / SMA : _____________________________________________ Kelas _________<br>
-                Alamat SD / SMP / SMA tersebut : ___________________________________________________________<br>
-                Diterima di sekolah ini : Tgl …………………… Kelas VII
+                Dari SD : <b>${data.asalSekolah}</b><br>
+                Alamat SD : ${data.alamatSekolahAsal}<br>
+                Nomor dan Tahun Ijazah SD : ${data.nomorIjazah || '-'}, ${data.tahunIjazah}
             </td>
         </tr>
     </table>
 
-    <!-- B. KETERANGAN ORANG TUA -->
     <div class="section-title" style="margin-top: 15px;">B. KETERANGAN ORANG TUA :</div>
     <table class="data-table">
-        <tr>
-            <td width="30%">1. a. Nama Ayah</td>
-            <td width="2%">:</td>
-            <td width="68%"><b>${data.nama_ayah || ''}</b></td>
-        </tr>
-        <tr>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;b. Nama Ibu</td>
-            <td>:</td>
-            <td><b>${data.nama_ibu || ''}</b></td>
-        </tr>
+        <tr><td width="30%">1. a. Nama Ayah</td><td width="2%">:</td><td width="68%"><b>${data.namaAyah}</b></td></tr>
+        <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;b. Nama Ibu</td><td>:</td><td><b>${data.namaIbu}</b></td></tr>
         <tr>
             <td colspan="3">
-                2. a. Alamat Orangtua : ${data.alamat_ortu || data.alamat || ''}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;b. Kota / Kode Pos : ___________________________Provinsi___________________________<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;c. Kode Area – Tlp. / HP : (___________) - _____________________HP: ${data.hp || ''}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;d. Alamat Surat Menyurat : ____________________________________________________________<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;e. Kota / Kode Pos Surat Menyurat : ____________________________________________________________<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;f. Atas Nama : ____________________________________________________________
+                2. a. Alamat Orangtua : ${data.alamatOrtu}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;b. No. HP / WhatsApp : ${data.noWhatsapp}
             </td>
         </tr>
         <tr>
             <td colspan="3">
-                3. a. Pekerjaan Ayah : ${data.pekerjaan_ayah || '-'}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;b. Pekerjaan Ibu : ${data.pekerjaan_ibu || '-'}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;c. Alamat + Kota Pekerjaan : ____________________________________________________________
+                3. a. Pekerjaan Ayah : ${data.pekerjaanAyah}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;b. Pekerjaan Ibu : ${data.pekerjaanIbu}
             </td>
         </tr>
         <tr>
             <td colspan="3">
                 4. Penghasilan Sebulan :<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;Penghasilan Ayah : Rp. ${data.penghasilan_ayah || '-'}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;Penghasilan Ibu : Rp. ${data.penghasilan_ibu || '-'}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                5. Pengeluaran Sebulan : Rp. _________________________________________________________
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                6. Jumlah Anak : Yang sudah menikah _________ Yang masih sekolah _________
+                &nbsp;&nbsp;&nbsp;&nbsp;Ayah : ${data.penghasilanAyah}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Ibu : ${data.penghasilanIbu}
             </td>
         </tr>
     </table>
-
-    <p style="margin-top: 15px; font-size: 10pt;">Formulir Pendaftaran ini diisi dengan sebenarnya sesuai data yang diminta</p>
 
     <table class="sig-container">
         <tr>
             <td width="50%"></td>
-            <td width="50%">Mamasa, ${data.tanggal_daftar || '7 September 2026'}</td>
+            <td width="50%">Mamasa, ${data.tglDaftar}</td>
         </tr>
         <tr>
             <td>Orangtua / Wali Calon Siswa<br><br><br><br>(________________________)</td>
-            <td>Calon Siswa<br><br><br><br><b><u>${data.nama || ''}</u></b></td>
+            <td>Calon Siswa<br><br><br><br><b><u>${data.namaSiswa}</u></b></td>
         </tr>
     </table>
 
-    <!-- HALAMAN KE-2: SURAT PERNYATAAN -->
     <div class="page-break"></div>
 
     <div style="text-align: center; margin-bottom: 20px;">
@@ -922,35 +866,31 @@
     <p class="statement-text">Yang bertanda tangan di bawah ini, calon siswa SMP Frater Mamasa dengan data – data sebagai berikut :</p>
 
     <table class="data-table" style="margin-left: 20px;">
-        <tr><td width="25%">Nama Lengkap</td><td width="2%">:</td><td><b>${data.nama || ''}</b></td></tr>
-        <tr><td>Tempat / Tgl. Lahir</td><td>:</td><td>${data.tempat_lahir || ''}, ${data.tanggal_lahir || ''}</td></tr>
-        <tr><td>Jenis Kelamin</td><td>:</td><td>${data.jk || ''}</td></tr>
-        <tr><td>Alamat</td><td>:</td><td>${data.alamat || ''}</td></tr>
+        <tr><td width="25%">Nama Lengkap</td><td width="2%">:</td><td><b>${data.namaSiswa}</b></td></tr>
+        <tr><td>Tempat / Tgl. Lahir</td><td>:</td><td>${data.tempatLahir}, ${data.tanggalLahir}</td></tr>
+        <tr><td>Jenis Kelamin</td><td>:</td><td>${data.jenisKelamin}</td></tr>
+        <tr><td>Alamat</td><td>:</td><td>${data.alamatLengkap}</td></tr>
     </table>
 
     <p class="statement-text">Dengan ini menyatakan :</p>
     <ol class="statement-list">
         <li>Bahwa saya mendaftarkan diri di sekolah ini atas kemauan saya dan orang tua saya.</li>
-        <li>Bahwa semua data dan dokumen yang saya sampaikan sebagai persyaratan Calon Siswa SMP / SMA Frater adalah benar.</li>
+        <li>Bahwa semua data dan dokumen yang saya sampaikan sebagai persyaratan Calon Siswa SMP Frater adalah benar.</li>
         <li>Bahwa saya bersedia untuk mengikuti peraturan Yayasan Taman Tunas dan Tata Tertib Sekolah.</li>
         <li>Bahwa saya bersedia untuk menerima sanksi apabila saya melakukan pelanggaran terhadap peraturan yang berlaku di sekolah.</li>
         <li>Bahwa saya bersedia menerima identitas sekolah yang berciri khas sebagai Sekolah Katolik dan bersedia mengikuti pelajaran Pendidikan Agama Katolik.</li>
     </ol>
 
-    <p class="statement-text">
-        Demikian persyaratan ini saya buat dengan sebenarnya tanpa ada unsur paksaan dari dan oleh siapapun dan saya buat dalam keadaan sehat jasmani dan rohani. Apabila dikemudian hari saya melanggar pernyataan yang telah saya buat di atas, saya bersedia mempertanggungjawabkan segala konsekuensi yang timbul menurut hukum yang berlaku di Negara Kesatuan Republik Indonesia.
-    </p>
-
     <table class="sig-container" style="margin-top: 30px;">
         <tr>
             <td width="50%"></td>
-            <td width="50%">Mamasa, ${data.tanggal_daftar || '7 September 2026'}</td>
+            <td width="50%">Mamasa, ${data.tglDaftar}</td>
         </tr>
         <tr>
             <td>
                 Yang Menyatakan,<br>
                 <div style="border: 1px solid #999; width: 90px; height: 50px; margin: 10px auto; font-size: 8pt; line-height: 50px; color: #666;">Materai Rp. 10.000,-</div>
-                <b>(<u>${data.nama || ''}</u>)</b>
+                <b>(<u>${data.namaSiswa}</u>)</b>
             </td>
             <td>
                 Orangtua / Wali Siswa,<br><br><br><br><br>
@@ -965,82 +905,33 @@
             </td>
         </tr>
     </table>
-
 </body>
 </html>`;
-}
+        }
 
-     async function handleFormSubmit(event) {
-  event.preventDefault();
-  
-  if (isSubmitting) return;
-  isSubmitting = true;
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            if (isSubmitting) return;
+            isSubmitting = true;
 
-  const submitBtn = document.getElementById("btnSubmit");
-  const loadingOverlay = document.getElementById("loadingOverlay");
-  
-  // Kunci tombol kirim
-  submitBtn.disabled = true;
-  submitBtn.classList.add("pointer-events-none", "opacity-50", "cursor-not-allowed");
-  loadingOverlay.classList.remove("hidden");
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            submitBtn.classList.add("pointer-events-none", "opacity-50", "cursor-not-allowed");
 
-  try {
-    // 1. Kumpulkan data formulir
-    const formData = getFormData();
+            Swal.fire({
+                title: 'Mengirim Pendaftaran...',
+                html: '<span id="swalProgressText">Sedang mengompres berkas & mengunggah ke Google Drive...</span>',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-    // 2. Kompresi & Proses Foto / Berkas
-    const compressedPhoto = await compressImageFile(document.getElementById("foto").files[0]);
-    const formHtmlContent = generateFormHTML(formData, compressedPhoto);
-
-    // 3. Buat payload pengiriman
-    const payload = {
-      ...formData,
-      form_html: formHtmlContent,
-      foto_base64: compressedPhoto,
-      kk_base64: await fileToBase64(document.getElementById("file_kk").files[0]),
-      akte_base64: await fileToBase64(document.getElementById("file_akte").files[0]),
-      bukti_base64: await fileToBase64(document.getElementById("file_bukti").files[0])
-    };
-
-    // 4. Kirim data ke Google Apps Script
-    await fetch(DEFAULT_PANITIA_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    // 5. Notifikasi Sukses & Reset Aplikasi
-    loadingOverlay.classList.add("hidden");
-    alert("Pendaftaran Berhasil Terkirim!\nData dan berkas formulir telah tersimpan di Google Drive Panitia.");
-
-    // Reset formulir ke halaman depan (kosong)
-    document.getElementById("formPendaftaran").reset();
-    if (typeof currentStep !== "undefined") {
-      currentStep = 1;
-      showStep(currentStep);
-    }
-    
-    // Scroll kembali ke paling atas
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-  } catch (error) {
-    console.error("Gagal mengirim pendaftaran:", error);
-    loadingOverlay.classList.add("hidden");
-    alert("Terjadi kesalahan saat mengunggah data. Silakan coba beberapa saat lagi.");
-  } finally {
-    // Buka kunci tombol pengiriman
-    isSubmitting = false;
-    submitBtn.disabled = false;
-    submitBtn.classList.remove("pointer-events-none", "opacity-50", "cursor-not-allowed");
-  }
-}
             try {
                 const namaSiswaClean = document.getElementById('namaSiswa').value.replace(/[^a-zA-Z0-9]/g, "_");
                 const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
                 const tglDaftar = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-                // Form Data Object
                 const formData = {
                     regNo: regNo,
                     tglDaftar: tglDaftar,
@@ -1081,8 +972,13 @@
                     files: []
                 };
 
-                // 1. Generate & Add Filled Form HTML Document
-                const formHtmlContent = generateFormulirHTML(formData);
+                // Compress Photo first for the template header
+                const fotoFile = document.getElementById('fileFoto').files[0];
+                const compressedFoto = fotoFile ? await processAndCompressFile(fotoFile) : null;
+                const photoBase64 = compressedFoto ? compressedFoto.base64 : '';
+
+                // 1. Generate Form HTML Document
+                const formHtmlContent = generateFormulirHTML(formData, photoBase64);
                 formData.files.push({
                     type: 'FormulirPendaftaran',
                     name: `Formulir_Pendaftaran_${namaSiswaClean}.html`,
@@ -1090,7 +986,7 @@
                     base64: btoa(unescape(encodeURIComponent(formHtmlContent)))
                 });
 
-                // 2. Compress and Add Uploaded User Files
+                // 2. Compress and Add Uploaded Files
                 const fileInputs = [
                     { id: 'fileFoto', type: 'PasFoto', label: 'Pas Foto' },
                     { id: 'fileKk', type: 'KK', label: 'Kartu Keluarga' },
@@ -1120,8 +1016,8 @@
                 const progressEl = document.getElementById('swalProgressText');
                 if (progressEl) progressEl.innerText = 'Mengunggah formulir & berkas ke Google Drive Panitia...';
 
-                // 3. Send via Fetch with 12-second Timeout Safety (Prevents infinite spinner)
-                const sendPromise = fetch(scriptUrl, {
+                // 3. Send via Fetch
+                const sendPromise = fetch(DEFAULT_PANITIA_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1148,11 +1044,10 @@
             } catch (err) {
                 console.error(err);
                 Swal.fire('Terjadi Kesalahan', 'Gagal memproses berkas: ' + err.message, 'error');
-                
+            } finally {
                 isSubmitting = false;
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
-                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Sekarang';
             }
         }
 
@@ -1179,7 +1074,7 @@
             document.getElementById('recPekerjaanIbu').innerText = `${data.pekerjaanIbu} (${data.penghasilanIbu})`;
             document.getElementById('recAlamatOrtu').innerText = data.alamatOrtu;
 
-            document.getElementById('recTanggalDaftar').innerText = data.tglDaftar || new Date().toLocaleDateString('id-ID');
+            document.getElementById('recTanggalDaftar').innerText = data.tglDaftar;
             document.getElementById('recSignNamaSiswa').innerText = data.namaSiswa;
             document.getElementById('recSignOrtu').innerText = `${data.namaAyah} / ${data.namaIbu}`;
 
@@ -1213,7 +1108,7 @@
                         <p class="mt-1">Nama: <strong>${match.namaSiswa}</strong></p>
                         <p>No. Registrasi: <strong>${match.regNo}</strong></p>
                         <p>Status: <span class="bg-green-200 text-green-800 px-1.5 py-0.5 rounded font-semibold text-[10px]">Tersimpan di Drive</span></p>
-                        <button onclick="closeCheckStatusModal(); showReceipt(match)" class="mt-2 text-xs bg-green-700 text-white px-3 py-1 rounded font-bold hover:bg-green-800">Buka / Cetak Formulir Resmi</button>
+                        <button type="button" onclick="closeCheckStatusModal(); showReceipt(match)" class="mt-2 text-xs bg-green-700 text-white px-3 py-1 rounded font-bold hover:bg-green-800">Buka / Cetak Formulir Resmi</button>
                     </div>
                 `;
             } else {
