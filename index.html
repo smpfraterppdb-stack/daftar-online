@@ -970,26 +970,71 @@
 </html>`;
 }
 
-        async function handleFormSubmit(event) {
-            event.preventDefault();
+     async function handleFormSubmit(event) {
+  event.preventDefault();
+  
+  if (isSubmitting) return;
+  isSubmitting = true;
 
-            if (isSubmitting) return false;
-            isSubmitting = true;
+  const submitBtn = document.getElementById("btnSubmit");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+  
+  // Kunci tombol kirim
+  submitBtn.disabled = true;
+  submitBtn.classList.add("pointer-events-none", "opacity-50", "cursor-not-allowed");
+  loadingOverlay.classList.remove("hidden");
 
-            const scriptUrl = getScriptUrl();
-            const submitBtn = document.getElementById('submitBtn');
-            
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Formulir & Berkas...';
+  try {
+    // 1. Kumpulkan data formulir
+    const formData = getFormData();
 
-            Swal.fire({
-                title: 'Menyiapkan Formulir & Berkas...',
-                html: '<span id="swalProgressText">Mengompres foto agar pengiriman cepat & simpan di Google Drive...</span>',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
+    // 2. Kompresi & Proses Foto / Berkas
+    const compressedPhoto = await compressImageFile(document.getElementById("foto").files[0]);
+    const formHtmlContent = generateFormHTML(formData, compressedPhoto);
 
+    // 3. Buat payload pengiriman
+    const payload = {
+      ...formData,
+      form_html: formHtmlContent,
+      foto_base64: compressedPhoto,
+      kk_base64: await fileToBase64(document.getElementById("file_kk").files[0]),
+      akte_base64: await fileToBase64(document.getElementById("file_akte").files[0]),
+      bukti_base64: await fileToBase64(document.getElementById("file_bukti").files[0])
+    };
+
+    // 4. Kirim data ke Google Apps Script
+    await fetch(DEFAULT_PANITIA_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // 5. Notifikasi Sukses & Reset Aplikasi
+    loadingOverlay.classList.add("hidden");
+    alert("Pendaftaran Berhasil Terkirim!\nData dan berkas formulir telah tersimpan di Google Drive Panitia.");
+
+    // Reset formulir ke halaman depan (kosong)
+    document.getElementById("formPendaftaran").reset();
+    if (typeof currentStep !== "undefined") {
+      currentStep = 1;
+      showStep(currentStep);
+    }
+    
+    // Scroll kembali ke paling atas
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+  } catch (error) {
+    console.error("Gagal mengirim pendaftaran:", error);
+    loadingOverlay.classList.add("hidden");
+    alert("Terjadi kesalahan saat mengunggah data. Silakan coba beberapa saat lagi.");
+  } finally {
+    // Buka kunci tombol pengiriman
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("pointer-events-none", "opacity-50", "cursor-not-allowed");
+  }
+}
             try {
                 const namaSiswaClean = document.getElementById('namaSiswa').value.replace(/[^a-zA-Z0-9]/g, "_");
                 const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
