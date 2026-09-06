@@ -44,11 +44,11 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openScriptModal()" class="px-3 py-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg shadow transition flex items-center gap-1">
-                    <i class="fa-solid fa-gear"></i> Setup Backend Drive
+                <button id="backendSetupBtn" onclick="openScriptModal()" class="px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium rounded-lg shadow-sm transition flex items-center gap-1.5" title="Pengaturan Khusus Panitia Admin">
+                    <i class="fa-solid fa-gear text-slate-500"></i> <span id="backendBtnText">Admin Drive</span>
                 </button>
-                <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1">
-                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status Status
+                <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status
                 </button>
             </div>
         </div>
@@ -387,14 +387,14 @@
         </div>
     </div>
 
-    <!-- MODAL PANDUAN CONFIG BACKEND GOOGLE APPS SCRIPT -->
+    <!-- MODAL PANDUAN CONFIG BACKEND GOOGLE APPS SCRIPT (KHUSUS PANITIA) -->
     <div id="scriptModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-700">
             <button onclick="closeScriptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h3 class="text-base font-bold text-blue-950 mb-2 flex items-center gap-2">
-                <i class="fa-brands fa-google-drive text-amber-500 text-lg"></i> Panduan Hubungkan Ke Google Drive Anda
+                <i class="fa-brands fa-google-drive text-amber-500 text-lg"></i> Pengaturan Backend Drive (Khusus Admin / Panitia)
             </h3>
-            <p class="mb-3">Aplikasi ini berjalan di <strong>GitHub Pages</strong>. Agar formulir dan upload berkas otomatis masuk ke folder Google Drive Anda, masukkan URL Web App Google Apps Script di bawah ini:</p>
+            <p class="mb-3">Ketikkan/Tempelkan URL Google Apps Script Web App yang sudah di-deploy oleh Panitia di sini:</p>
 
             <div class="mb-4">
                 <label class="block font-bold text-gray-800 mb-1">URL Google Apps Script Deployment:</label>
@@ -412,7 +412,7 @@
                 <li>Salin (copy) kode Apps Script di bawah ini dan tempelkan ke editor Apps Script tersebut.</li>
                 <li>Klik <strong>Deploy > New Deployment</strong>. Pilih type <strong>Web App</strong>.</li>
                 <li>Set <strong>Execute as: Me</strong> dan <strong>Who has access: Anyone</strong>.</li>
-                <li>Klik <strong>Deploy</strong>, salin URL yang dihasilkan, lalu masukkan pada kolom di atas!</li>
+                <li>Klik <strong>Deploy</strong>, salin URL yang dihasilkan, lalu tempelkan ke variabel <code>https://script.google.com/macros/s/AKfycby1QW6VWnjwA-Bib2_urfdxNucPo9laYXKQYxSrUvBqQfDHg3sdCoaRWv8DCNJWTw7W/exec</code> pada baris pertama JavaScript di GitHub!</li>
             </ol>
 
             <div class="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto relative group">
@@ -481,8 +481,25 @@ function doPost(e) {
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Store Backend URL in LocalStorage
-        let googleAppsScriptUrl = localStorage.getItem('spmb_script_url') || '';
+        // =========================================================================
+        // TEMPELKAN URL APPS SCRIPT DI SINI (SATU KALI UNTUK SEMUA PENDAFTAR)
+        // =========================================================================
+        const DEFAULT_PANITIA_SCRIPT_URL = ""; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
+        
+        let googleAppsScriptUrl = localStorage.getItem('spmb_script_url') || DEFAULT_PANITIA_SCRIPT_URL;
+
+        // Update UI Admin Button State
+        function updateBackendStatusUI() {
+            const textEl = document.getElementById('backendBtnText');
+            if (googleAppsScriptUrl) {
+                if (textEl) textEl.innerText = "Drive Terhubung";
+            } else {
+                if (textEl) textEl.innerText = "Admin Drive";
+            }
+        }
+
+        // Initialize UI State
+        updateBackendStatusUI();
 
         // Form Step Navigation
         function nextStep(stepNumber) {
@@ -637,11 +654,11 @@ function doPost(e) {
                 // Generate Unique Reg No
                 const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
 
-                // If Google Apps Script URL exists, send via fetch
+                // Send via fetch to Google Apps Script Backend if URL exists
                 if (googleAppsScriptUrl) {
                     await fetch(googleAppsScriptUrl, {
                         method: 'POST',
-                        mode: 'no-cors', // Standard Google Apps Script cross-origin
+                        mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
@@ -652,7 +669,7 @@ function doPost(e) {
                 formData.regNo = regNo;
                 formData.tglDaftar = new Date().toLocaleDateString('id-ID');
                 existingRecords.push(formData);
-                localStorage.getItem('spmb_records', JSON.stringify(existingRecords));
+                localStorage.setItem('spmb_records', JSON.stringify(existingRecords));
 
                 Swal.fire({
                     icon: 'success',
@@ -725,7 +742,7 @@ function doPost(e) {
             }
         }
 
-        // Apps Script Config Modal
+        // Apps Script Config Modal (Admin Only)
         function openScriptModal() {
             document.getElementById('scriptUrlInput').value = googleAppsScriptUrl;
             document.getElementById('scriptModal').classList.remove('hidden');
@@ -737,6 +754,7 @@ function doPost(e) {
             const url = document.getElementById('scriptUrlInput').value.trim();
             googleAppsScriptUrl = url;
             localStorage.setItem('spmb_script_url', url);
+            updateBackendStatusUI();
             Swal.fire('Tersimpan', 'URL Google Apps Script Backend telah berhasil disimpan.', 'success');
             closeScriptModal();
         }
