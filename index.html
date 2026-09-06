@@ -44,11 +44,8 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openUrlConfigModal()" class="px-3 py-1.5 text-xs bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-gear"></i> Setting URL Drive
-                </button>
-                <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status
+                <button onclick="openCheckStatusModal()" class="px-4 py-2 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status Pendaftaran
                 </button>
             </div>
         </div>
@@ -226,7 +223,7 @@
                     <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
                         <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload Berkas Persyaratan
                     </h3>
-                    <p class="text-xs text-gray-500">Format yang diperbolehkan: JPG, PNG, atau PDF (Maksimal 5MB per berkas). Semua berkas tersimpan ke Google Drive sekolah.</p>
+                    <p class="text-xs text-gray-500">Format yang diperbolehkan: JPG, PNG, atau PDF (Maksimal 5MB per berkas). Semua berkas tersimpan otomatis ke Google Drive sekolah.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -323,7 +320,7 @@
     <!-- Footer -->
     <footer class="bg-blue-950 text-white text-center py-4 px-4 text-xs border-t">
         <p>&copy; 2026 SMP Farter Mamasa. Hak Cipta Dilindungi Undang-Undang.</p>
-        <p class="text-blue-300 mt-1">Dihubungkan ke Google Drive: Folder Dokumen Form & Folder Berkas Terupload</p>
+        <p class="text-blue-300 mt-1">Dihubungkan langsung ke Google Drive & Google Sheets Panitia SPMB</p>
     </footer>
 
     <!-- MODAL CETAK BUKTI -->
@@ -387,64 +384,26 @@
         </div>
     </div>
 
-    <!-- MODAL SETTING URL APPS SCRIPT -->
-    <div id="urlConfigModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
-            <button onclick="closeUrlConfigModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-base font-bold text-blue-950 mb-2"><i class="fa-solid fa-link text-amber-600"></i> Pengaturan Web App URL Google Drive</h3>
-            <p class="text-xs text-gray-600 mb-4">Masukkan URL Web App dari Google Apps Script yang sudah Anda Deploy agar berkas & data terkirim langsung ke Google Drive & Google Sheets panitia.</p>
-            
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Web App URL (Google Apps Script):</label>
-                    <input type="url" id="inputAppsScriptUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-3 py-2 text-xs border rounded-lg outline-none focus:ring-2 focus:ring-amber-500">
-                </div>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="saveAppsScriptUrl()" class="flex-1 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 transition">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan URL
-                    </button>
-                    <button onclick="closeUrlConfigModal()" class="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-300 transition">
-                        Batal
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript Application Logic -->
     <script>
         // =========================================================================
-        // TEMPELKAN URL APPS SCRIPT DI SINI ATAU MELALUI MENU SETTING DI NAVBAR
+        // URL WEB APP GOOGLE APPS SCRIPT TERHUBUNG
         // =========================================================================
         const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxvsD1RGn_2hXZoh85MtAUECAmVNi3shylqTJNckI24FmRcJC-THBXfE3ScIVkDX4z/exec"; 
         
         function getScriptUrl() {
-            return localStorage.getItem('spmb_script_url') || DEFAULT_PANITIA_SCRIPT_URL;
+            return DEFAULT_PANITIA_SCRIPT_URL;
         }
 
-        function openUrlConfigModal() {
-            document.getElementById('inputAppsScriptUrl').value = getScriptUrl();
-            document.getElementById('urlConfigModal').classList.remove('hidden');
-        }
-
-        function closeUrlConfigModal() {
-            document.getElementById('urlConfigModal').classList.add('hidden');
-        }
-
-        function saveAppsScriptUrl() {
-            const url = document.getElementById('inputAppsScriptUrl').value.trim();
-            if (!url) {
-                Swal.fire('Peringatan', 'Harap masukkan URL Google Apps Script.', 'warning');
-                return;
-            }
-            if (!url.startsWith('https://script.google.com/macros/s/')) {
-                Swal.fire('Format URL Salah', 'URL Web App harus diawali dengan https://script.google.com/macros/s/ dan diakhiri dengan /exec', 'error');
-                return;
-            }
-            localStorage.setItem('spmb_script_url', url);
-            Swal.fire('Berhasil Disimpan', 'URL Google Apps Script berhasil dihubungkan!', 'success');
-            closeUrlConfigModal();
-        }
+        function nextStep(stepNumber) {
+            // Validation step 1
+            if (stepNumber === 2) {
+                const req1 = ['namaSiswa', 'nisn', 'nikSiswa', 'jenisKelamin', 'tempatLahir', 'tanggalLahir', 'agama', 'asalSekolah', 'alamatLengkap'];
+                for (let id of req1) {
+                    if (!document.getElementById(id).value.trim()) {
+                        Swal.fire('Mohon Lengkapi', 'Silakan isi semua data calon siswa yang berstempel (*).', 'warning');
+                        return;
+                    }
                 }
             }
             // Validation step 2
@@ -480,7 +439,6 @@
             }
         }
 
-        // Review Summary Step 4
         function reviewSummary() {
             // Validate step 3 files
             const files = ['fileFoto', 'fileKk', 'fileTransfer', 'fileAkte'];
@@ -516,7 +474,6 @@
             nextStep(4);
         }
 
-        // Helper File to Base64
         function readFileAsBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -526,23 +483,10 @@
             });
         }
 
-        // Handle Form Submission
         async function handleFormSubmit(event) {
             event.preventDefault();
 
             const scriptUrl = getScriptUrl();
-
-            if (!scriptUrl) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'URL Google Apps Script Belum Diisi!',
-                    text: 'Aplikasi belum terhubung ke Google Drive. Klik tombol "Setting URL Drive" di pojok kanan atas dan masukkan URL Web App dari Google Apps Script Anda.',
-                    confirmButtonText: 'Buka Setting URL Drive'
-                }).then(() => {
-                    openUrlConfigModal();
-                });
-                return;
-            }
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
@@ -634,7 +578,6 @@
             }
         }
 
-        // Show Receipt Modal
         function showReceipt(data) {
             document.getElementById('receiptRegNo').innerText = data.regNo || 'SPMB-2026-001';
             document.getElementById('receiptNama').innerText = data.namaSiswa;
