@@ -31,27 +31,28 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between">
 
-    <!-- Header / Navbar -->
     <header class="bg-white shadow-md border-b-4 border-blue-700 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <img id="school-logo" src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=SMP+Farter';" 
-                     alt="Logo SMP Farter Mamasa" class="h-16 w-16 object-contain rounded-full border shadow-sm">
+                     onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e3a8a/ffffff?text=SMP+Farter';" 
+                     alt="Logo SMP Farter Mamasa" class="h-14 w-14 sm:h-16 sm:w-16 object-contain rounded-full border shadow-sm">
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold text-blue-950 uppercase tracking-wide">SMP Farter Mamasa</h1>
+                    <h1 class="text-lg sm:text-2xl font-bold text-blue-950 uppercase tracking-wide">SMP Farter Mamasa</h1>
                     <p class="text-xs sm:text-sm text-gray-600 font-medium">Sistem Penerimaan Murid Baru (SPMB) Online</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openCheckStatusModal()" class="px-4 py-2 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status Pendaftaran
+                <button onclick="openScriptGuideModal()" class="px-3 py-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5" title="Petunjuk Pengaturan Google Drive Panitia">
+                    <i class="fa-solid fa-code"></i> Panduan Script Drive
+                </button>
+                <button onclick="openCheckStatusModal()" class="px-3 py-2 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Banner Hero -->
     <section class="bg-school text-white py-8 px-4 text-center shadow-inner">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl sm:text-3xl font-bold mb-2">Pendaftaran Siswa Baru Tahun Ajaran 2026/2027</h2>
@@ -59,7 +60,6 @@
         </div>
     </section>
 
-    <!-- Main Container -->
     <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow">
         
         <!-- Progress Steps -->
@@ -90,7 +90,6 @@
         <!-- Form Wrapper -->
         <form id="spmbForm" onsubmit="handleFormSubmit(event)" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden p-6 sm:p-8">
 
-            <!-- STEP 1: Data Calon Siswa -->
             <div id="step-1" class="step-content space-y-6">
                 <div class="border-b pb-3 mb-4">
                     <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
@@ -165,7 +164,6 @@
                 </div>
             </div>
 
-            <!-- STEP 2: Data Orang Tua / Wali -->
             <div id="step-2" class="step-content space-y-6 hidden">
                 <div class="border-b pb-3 mb-4">
                     <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
@@ -217,13 +215,12 @@
                 </div>
             </div>
 
-            <!-- STEP 3: Upload Berkas Dokumen -->
             <div id="step-3" class="step-content space-y-6 hidden">
                 <div class="border-b pb-3 mb-4">
                     <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
                         <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload Berkas Persyaratan
                     </h3>
-                    <p class="text-xs text-gray-500">Format yang diperbolehkan: JPG, PNG, atau PDF (Maksimal 5MB per berkas). Semua berkas tersimpan otomatis ke Google Drive sekolah.</p>
+                    <p class="text-xs text-gray-500">Sistem dilengkapi fitur <b>otomatis optimasi foto</b> sehingga pengiriman berjalan cepat dan langsung tersimpan di Google Drive panitia.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -270,7 +267,6 @@
                 </div>
             </div>
 
-            <!-- STEP 4: Konfirmasi & Kirim -->
             <div id="step-4" class="step-content space-y-6 hidden">
                 <div class="border-b pb-3 mb-4">
                     <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
@@ -317,13 +313,11 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-blue-950 text-white text-center py-4 px-4 text-xs border-t">
         <p>&copy; 2026 SMP Farter Mamasa. Hak Cipta Dilindungi Undang-Undang.</p>
         <p class="text-blue-300 mt-1">Dihubungkan langsung ke Google Drive & Google Sheets Panitia SPMB</p>
     </footer>
 
-    <!-- MODAL CETAK BUKTI -->
     <div id="receiptModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeReceiptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -332,7 +326,7 @@
                 <div class="flex items-center justify-between border-b-2 border-blue-900 pb-3">
                     <div class="flex items-center gap-3">
                         <img src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=SMP+Farter';" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/80x80/1e3a8a/ffffff?text=SMP+Farter';" 
                              class="h-12 w-12 object-contain">
                         <div>
                             <h4 class="font-bold text-sm text-blue-950">SMP FARTER MAMASA</h4>
@@ -372,7 +366,6 @@
         </div>
     </div>
 
-    <!-- MODAL CARI / CEK STATUS -->
     <div id="checkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="closeCheckStatusModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -384,13 +377,85 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <div id="scriptGuideModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeScriptGuideModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-blue-950 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-600"></i> Panduan Script Google Drive & Google Sheets
+            </h3>
+            <p class="text-xs text-gray-600 mb-3">
+                Agar berkas terunggah ke Google Drive dan data masuk ke Google Sheets, pastikan kode berikut terpasang pada <b>Google Apps Script</b> proyek Anda.
+            </p>
+            
+            <div class="bg-gray-900 text-emerald-400 p-3 rounded-lg text-[11px] font-mono overflow-x-auto mb-4 border border-gray-700">
+                <pre><code>function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getActiveSheet();
+    
+    // Auto Create Folder di Google Drive
+    var mainFolderName = "BERKAS SPMB 2026 - SMP FARTER";
+    var folders = DriveApp.getFoldersByName(mainFolderName);
+    var mainFolder = folders.hasNext() ? folders.next() : DriveApp.createFolder(mainFolderName);
+    
+    // Subfolder per Siswa
+    var studentFolder = mainFolder.createFolder(data.regNo + "_" + data.namaSiswa.replace(/[^a-zA-Z0-9]/g, "_"));
+    
+    var fileUrls = {};
+    if (data.files &amp;&amp; data.files.length &gt; 0) {
+      for (var i = 0; i &lt; data.files.length; i++) {
+        var f = data.files[i];
+        var bytes = Utilities.base64Decode(f.base64);
+        var blob = Utilities.newBlob(bytes, f.mimeType, f.name);
+        var savedFile = studentFolder.createFile(blob);
+        savedFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        fileUrls[f.type] = savedFile.getUrl();
+      }
+    }
+    
+    // Masukkan ke Spreadsheet
+    sheet.appendRow([
+      new Date(), data.regNo, data.namaSiswa, "'" + data.nisn, "'" + data.nikSiswa,
+      data.jenisKelamin, data.tempatLahir, data.tanggalLahir, data.agama,
+      data.asalSekolah, data.alamatLengkap, data.namaAyah, data.pekerjaanAyah,
+      data.namaIbu, data.pekerjaanIbu, "'" + data.noWhatsapp, data.namaWali || "-",
+      fileUrls['PasFoto'] || "-", fileUrls['KK'] || "-", fileUrls['BuktiTransfer'] || "-", fileUrls['Akte'] || "-"
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({result: "success"}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({result: "error", message: err.toString()}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}</code></pre>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-xs text-blue-900 space-y-1">
+                <p class="font-bold"><i class="fa-solid fa-circle-info"></i> Langkah Publikasi Apps Script:</p>
+                <ol class="list-decimal pl-4 space-y-0.5">
+                    <li>Buka Google Sheets Panitia &rarr; Menu <b>Ekstensi</b> &rarr; <b>Apps Script</b>.</li>
+                    <li>Hapus kode lama, paste kode hijau di atas, klik <b>Simpan</b>.</li>
+                    <li>Klik <b>Terapkan (Deploy)</b> &rarr; <b>Penerapan Baru</b>.</li>
+                    <li>Pilih Jenis: <b>Aplikasi Web</b>.</li>
+                    <li>Jalankan sebagai: <b>Saya (Email Anda)</b>.</li>
+                    <li>Siapa yang memiliki akses: <b>Siapa saja (Anyone)</b> &rarr; Klik <b>Terapkan</b>.</li>
+                </ol>
+            </div>
+
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeScriptGuideModal()" class="px-5 py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition">Selesai / Mengerti</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // =========================================================================
-        // URL WEB APP GOOGLE APPS SCRIPT TERHUBUNG
-        // =========================================================================
         const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxvsD1RGn_2hXZoh85MtAUECAmVNi3shylqTJNckI24FmRcJC-THBXfE3ScIVkDX4z/exec"; 
         
+        // Flag global untuk mencegah pengiriman berulang (double submit)
+        let isSubmitting = false;
+
         function getScriptUrl() {
             return DEFAULT_PANITIA_SCRIPT_URL;
         }
@@ -474,11 +539,56 @@
             nextStep(4);
         }
 
-        function readFileAsBase64(file) {
+        function processAndCompressFile(file) {
             return new Promise((resolve, reject) => {
+                // If it's a PDF, read directly as Base64
+                if (file.type === 'application/pdf') {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve({
+                        mimeType: 'application/pdf',
+                        base64: reader.result.split(',')[1]
+                    });
+                    reader.onerror = err => reject(err);
+                    reader.readAsDataURL(file);
+                    return;
+                }
+
+                // If image, compress using HTML5 Canvas to keep size around ~200-400KB
                 const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 1200; // Resize large camera photos
+
+                        if (width > maxDim || height > maxDim) {
+                            if (width > height) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Export compressed JPEG
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve({
+                            mimeType: 'image/jpeg',
+                            base64: dataUrl.split(',')[1]
+                        });
+                    };
+                    img.onerror = () => reject(new Error('Gagal membaca gambar'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = err => reject(err);
                 reader.readAsDataURL(file);
             });
         }
@@ -486,45 +596,63 @@
         async function handleFormSubmit(event) {
             event.preventDefault();
 
-            const scriptUrl = getScriptUrl();
+            // Jika sedang dalam proses submit, batalkan klik berikutnya
+            if (isSubmitting) {
+                return false;
+            }
+            isSubmitting = true;
 
+            const scriptUrl = getScriptUrl();
             const submitBtn = document.getElementById('submitBtn');
+            
+            // Nonaktifkan tombol secara visual dan fungsional
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses & Mengirim ke Drive...';
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses & Mengunggah...';
 
             Swal.fire({
-                title: 'Mengirim Data...',
-                text: 'Mengeposkan formulir dan mengunggah dokumen ke Google Drive SMP Farter Mamasa.',
+                title: 'Mengompresi & Menyiapkan Berkas...',
+                html: '<span id="swalProgressText">Mengompres foto agar upload cepat dan lancar...</span>',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
 
             try {
-                // Read All Files
                 const namaSiswaClean = document.getElementById('namaSiswa').value.replace(/[^a-zA-Z0-9]/g, "_");
                 const fileInputs = [
-                    { id: 'fileFoto', type: 'PasFoto', name: `PasFoto_${namaSiswaClean}_` + document.getElementById('fileFoto').files[0].name },
-                    { id: 'fileKk', type: 'KK', name: `KK_${namaSiswaClean}_` + document.getElementById('fileKk').files[0].name },
-                    { id: 'fileTransfer', type: 'BuktiTransfer', name: `BuktiTransfer_${namaSiswaClean}_` + document.getElementById('fileTransfer').files[0].name },
-                    { id: 'fileAkte', type: 'Akte', name: `Akte_${namaSiswaClean}_` + document.getElementById('fileAkte').files[0].name }
+                    { id: 'fileFoto', type: 'PasFoto', label: 'Pas Foto' },
+                    { id: 'fileKk', type: 'KK', label: 'Kartu Keluarga' },
+                    { id: 'fileTransfer', type: 'BuktiTransfer', label: 'Bukti Transfer' },
+                    { id: 'fileAkte', type: 'Akte', label: 'Akte Kelahiran' }
                 ];
 
                 const processedFiles = [];
-                for (let item of fileInputs) {
+                for (let i = 0; i < fileInputs.length; i++) {
+                    const item = fileInputs[i];
                     const fileObj = document.getElementById(item.id).files[0];
                     if (fileObj) {
-                        const base64Data = await readFileAsBase64(fileObj);
+                        const progressEl = document.getElementById('swalProgressText');
+                        if (progressEl) progressEl.innerText = `Mengompres ${item.label} (${i+1}/${fileInputs.length})...`;
+
+                        const compressed = await processAndCompressFile(fileObj);
+                        const fileExt = compressed.mimeType === 'application/pdf' ? 'pdf' : 'jpg';
+                        
                         processedFiles.push({
                             type: item.type,
-                            name: item.name,
-                            mimeType: fileObj.type,
-                            base64: base64Data
+                            name: `${item.type}_${namaSiswaClean}.${fileExt}`,
+                            mimeType: compressed.mimeType,
+                            base64: compressed.base64
                         });
                     }
                 }
 
+                const progressEl = document.getElementById('swalProgressText');
+                if (progressEl) progressEl.innerText = 'Mengirim data dan menyimpan ke Google Drive Panitia...';
+
                 // Construct Data Object
+                const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
                 const formData = {
+                    regNo: regNo,
                     namaSiswa: document.getElementById('namaSiswa').value,
                     nisn: document.getElementById('nisn').value,
                     nikSiswa: document.getElementById('nikSiswa').value,
@@ -543,10 +671,7 @@
                     files: processedFiles
                 };
 
-                // Generate Unique Reg No
-                const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
-                formData.regNo = regNo;
-
+                // Send request to Google Apps Script
                 await fetch(scriptUrl, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -554,7 +679,7 @@
                     body: JSON.stringify(formData)
                 });
 
-                // Store local record for receipt/lookup
+                // Store local record
                 const existingRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
                 formData.tglDaftar = new Date().toLocaleDateString('id-ID');
                 existingRecords.push(formData);
@@ -563,7 +688,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Pendaftaran Berhasil Terkirim!',
-                    text: 'Formulir dan berkas Anda telah diproses dan dikirim ke Google Drive & Spreadsheet Panitia.',
+                    text: 'Seluruh dokumen telah berhasil diunggah ke Google Drive & tersimpan di Google Sheets Panitia.',
                     confirmButtonText: 'Cetak Bukti Pendaftaran'
                 }).then(() => {
                     showReceipt(formData);
@@ -571,9 +696,12 @@
 
             } catch (err) {
                 console.error(err);
-                Swal.fire('Terjadi Kesalahan', 'Gagal mengunggah berkas: ' + err.message, 'error');
-            } finally {
+                Swal.fire('Terjadi Kesalahan', 'Gagal memproses berkas: ' + err.message, 'error');
+                
+                // Reset tombol dan flag hanya jika terjadi error agar pengguna bisa mencoba lagi
+                isSubmitting = false;
                 submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
                 submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Sekarang';
             }
         }
@@ -594,7 +722,6 @@
             document.getElementById('receiptModal').classList.add('hidden');
         }
 
-        // Check Status Functions
         function openCheckStatusModal() {
             document.getElementById('checkModal').classList.remove('hidden');
             document.getElementById('checkResult').classList.add('hidden');
@@ -602,6 +729,14 @@
         function closeCheckStatusModal() {
             document.getElementById('checkModal').classList.add('hidden');
         }
+
+        function openScriptGuideModal() {
+            document.getElementById('scriptGuideModal').classList.remove('hidden');
+        }
+        function closeScriptGuideModal() {
+            document.getElementById('scriptGuideModal').classList.add('hidden');
+        }
+
         function performCheckStatus() {
             const query = document.getElementById('checkNisnInput').value.trim();
             const resDiv = document.getElementById('checkResult');
@@ -624,7 +759,7 @@
                 resDiv.innerHTML = `
                     <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-900">
                         <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Tidak Ditemukan</p>
-                        <p class="mt-1">Pendaftaran dengan NISN/No Reg "${query}" belum ditemukan di browser ini. Jika baru mendaftar di perangkat lain, berkas sudah tersimpan langsung di Drive Panitia.</p>
+                        <p class="mt-1">Pendaftaran dengan NISN/No Reg "${query}" belum ditemukan di perangkat ini. Jika baru mendaftar dari perangkat lain, berkas sudah tersimpan langsung di Google Drive Panitia.</p>
                     </div>
                 `;
             }
