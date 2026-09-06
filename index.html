@@ -44,9 +44,6 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button id="backendSetupBtn" onclick="openScriptModal()" class="px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium rounded-lg shadow-sm transition flex items-center gap-1.5" title="Pengaturan Khusus Panitia Admin">
-                    <i class="fa-solid fa-gear text-slate-500"></i> <span id="backendBtnText">Admin Drive</span>
-                </button>
                 <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass"></i> Cek Status
                 </button>
@@ -387,119 +384,14 @@
         </div>
     </div>
 
-    <!-- MODAL PANDUAN CONFIG BACKEND GOOGLE APPS SCRIPT (KHUSUS PANITIA) -->
-    <div id="scriptModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-700">
-            <button onclick="closeScriptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-base font-bold text-blue-950 mb-2 flex items-center gap-2">
-                <i class="fa-brands fa-google-drive text-amber-500 text-lg"></i> Pengaturan Backend Drive (Khusus Admin / Panitia)
-            </h3>
-            <p class="mb-3">Ketikkan/Tempelkan URL Google Apps Script Web App yang sudah di-deploy oleh Panitia di sini:</p>
-
-            <div class="mb-4">
-                <label class="block font-bold text-gray-800 mb-1">URL Google Apps Script Deployment:</label>
-                <div class="flex gap-2">
-                    <input type="url" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3 py-2 border rounded-lg outline-none text-xs">
-                    <button onclick="saveScriptUrl()" class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">Simpan URL</button>
-                </div>
-            </div>
-
-            <hr class="my-3">
-
-            <p class="font-bold text-blue-900 mb-1">Langkah Mudah Membuat Script di Google Drive (Cukup 1 Kali Setup):</p>
-            <ol class="list-decimal pl-4 space-y-1.5 mb-3">
-                <li>Buka <a href="https://script.google.com" target="_blank" class="text-blue-600 underline">script.google.com</a> lalu klik <strong>New Project</strong>.</li>
-                <li>Salin (copy) kode Apps Script di bawah ini dan tempelkan ke editor Apps Script tersebut.</li>
-                <li>Klik <strong>Deploy > New Deployment</strong>. Pilih type <strong>Web App</strong>.</li>
-                <li>Set <strong>Execute as: Me</strong> dan <strong>Who has access: Anyone</strong>.</li>
-                <li>Klik <strong>Deploy</strong>, salin URL yang dihasilkan, lalu tempelkan ke variabel <code>https://script.google.com/macros/s/AKfycby1QW6VWnjwA-Bib2_urfdxNucPo9laYXKQYxSrUvBqQfDHg3sdCoaRWv8DCNJWTw7W/exec</code> pada baris pertama JavaScript di GitHub!</li>
-            </ol>
-
-            <div class="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto relative group">
-                <button onclick="copyAppsScriptCode()" class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded">Copy Code</button>
-<pre id="appsScriptCode" class="font-mono text-[11px] leading-relaxed">
-// KODE GOOGLE APPS SCRIPT UNTUK SMP FARTER MAMASA
-const FOLDER_DOC_ID = "1dJVlX6xYOHUc2H5TsP9A7Z_rgSF9xiEY";
-const FOLDER_BERKAS_ID = "1-LGTdy1XyHR0gefvSyGqEEwIu7XrgWCC";
-const DOC_TEMPLATE_ID = "1GrTCFV0pdszmc1YenSbQLJ_5XpRAWjFSm2MIHKPhBlE";
-
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const targetFolderDoc = DriveApp.getFolderById(FOLDER_DOC_ID);
-    const targetFolderBerkas = DriveApp.getFolderById(FOLDER_BERKAS_ID);
-    
-    // 1. Buat Dokumen Formulir khusus siswa dari Template
-    let newDocFile;
-    if (DOC_TEMPLATE_ID) {
-      const templateFile = DriveApp.getFileById(DOC_TEMPLATE_ID);
-      newDocFile = templateFile.makeCopy("Formulir - " + data.namaSiswa, targetFolderDoc);
-      const doc = DocumentApp.openById(newDocFile.getId());
-      const body = doc.getBody();
-      
-      body.replaceText("{{NAMA_SISWA}}", data.namaSiswa || "");
-      body.replaceText("{{NISN}}", data.nisn || "");
-      body.replaceText("{{NIK}}", data.nikSiswa || "");
-      body.replaceText("{{TTL}}", (data.tempatLahir + ", " + data.tanggalLahir) || "");
-      body.replaceText("{{JK}}", data.jenisKelamin || "");
-      body.replaceText("{{AGAMA}}", data.agama || "");
-      body.replaceText("{{SEKOLAH_ASAL}}", data.asalSekolah || "");
-      body.replaceText("{{ALAMAT}}", data.alamatLengkap || "");
-      body.replaceText("{{AYAH}}", data.namaAyah || "");
-      body.replaceText("{{IBU}}", data.namaIbu || "");
-      body.replaceText("{{WA}}", data.noWhatsapp || "");
-      doc.saveAndClose();
-    }
-    
-    // 2. Simpan Berkas Upload (Foto, KK, Bukti Transfer, Akte)
-    const fileUrls = {};
-    if (data.files && data.files.length > 0) {
-      data.files.forEach(f => {
-        const fileBlob = Utilities.newBlob(Utilities.base64Decode(f.base64), f.mimeType, f.name);
-        const uploadedFile = targetFolderBerkas.createFile(fileBlob);
-        fileUrls[f.type] = uploadedFile.getUrl();
-      });
-    }
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      message: "Data pendaftaran berhasil tersimpan ke Google Drive!",
-      docUrl: newDocFile ? newDocFile.getUrl() : ""
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-</pre>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript Application Logic -->
     <script>
         // =========================================================================
         // TEMPELKAN URL APPS SCRIPT DI SINI (SATU KALI UNTUK SEMUA PENDAFTAR)
         // =========================================================================
-        const DEFAULT_PANITIA_SCRIPT_URL = ""; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
+        const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1QW6VWnjwA-Bib2_urfdxNucPo9laYXKQYxSrUvBqQfDHg3sdCoaRWv8DCNJWTw7W/exec"; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
         
-        let googleAppsScriptUrl = localStorage.getItem('spmb_script_url') || DEFAULT_PANITIA_SCRIPT_URL;
-
-        // Update UI Admin Button State
-        function updateBackendStatusUI() {
-            const textEl = document.getElementById('backendBtnText');
-            if (googleAppsScriptUrl) {
-                if (textEl) textEl.innerText = "Drive Terhubung";
-            } else {
-                if (textEl) textEl.innerText = "Admin Drive";
-            }
-        }
-
-        // Initialize UI State
-        updateBackendStatusUI();
+        let googleAppsScriptUrl = DEFAULT_PANITIA_SCRIPT_URL;
 
         // Form Step Navigation
         function nextStep(stepNumber) {
@@ -740,36 +632,6 @@ function doPost(e) {
                     </div>
                 `;
             }
-        }
-
-        // Apps Script Config Modal (Admin Only)
-        function openScriptModal() {
-            document.getElementById('scriptUrlInput').value = googleAppsScriptUrl;
-            document.getElementById('scriptModal').classList.remove('hidden');
-        }
-        function closeScriptModal() {
-            document.getElementById('scriptModal').classList.add('hidden');
-        }
-        function saveScriptUrl() {
-            const url = document.getElementById('scriptUrlInput').value.trim();
-            googleAppsScriptUrl = url;
-            localStorage.setItem('spmb_script_url', url);
-            updateBackendStatusUI();
-            Swal.fire('Tersimpan', 'URL Google Apps Script Backend telah berhasil disimpan.', 'success');
-            closeScriptModal();
-        }
-        function copyAppsScriptCode() {
-            const code = document.getElementById('appsScriptCode').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Kode Apps Script disalin!',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            });
         }
     </script>
 </body>
