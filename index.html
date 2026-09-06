@@ -43,9 +43,6 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openScriptGuideModal()" class="px-3 py-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5" title="Petunjuk Pengaturan Google Drive Panitia">
-                    <i class="fa-solid fa-code"></i> Panduan Script Drive
-                </button>
                 <button onclick="openCheckStatusModal()" class="px-3 py-2 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass"></i> Cek Status
                 </button>
@@ -377,79 +374,6 @@
         </div>
     </div>
 
-    <div id="scriptGuideModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeScriptGuideModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-lg font-bold text-blue-950 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-emerald-600"></i> Panduan Script Google Drive & Google Sheets
-            </h3>
-            <p class="text-xs text-gray-600 mb-3">
-                Agar berkas terunggah ke Google Drive dan data masuk ke Google Sheets, pastikan kode berikut terpasang pada <b>Google Apps Script</b> proyek Anda.
-            </p>
-            
-            <div class="bg-gray-900 text-emerald-400 p-3 rounded-lg text-[11px] font-mono overflow-x-auto mb-4 border border-gray-700">
-                <pre><code>function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getActiveSheet();
-    
-    // Auto Create Folder di Google Drive
-    var mainFolderName = "BERKAS SPMB 2026 - SMP FARTER";
-    var folders = DriveApp.getFoldersByName(mainFolderName);
-    var mainFolder = folders.hasNext() ? folders.next() : DriveApp.createFolder(mainFolderName);
-    
-    // Subfolder per Siswa
-    var studentFolder = mainFolder.createFolder(data.regNo + "_" + data.namaSiswa.replace(/[^a-zA-Z0-9]/g, "_"));
-    
-    var fileUrls = {};
-    if (data.files &amp;&amp; data.files.length &gt; 0) {
-      for (var i = 0; i &lt; data.files.length; i++) {
-        var f = data.files[i];
-        var bytes = Utilities.base64Decode(f.base64);
-        var blob = Utilities.newBlob(bytes, f.mimeType, f.name);
-        var savedFile = studentFolder.createFile(blob);
-        savedFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-        fileUrls[f.type] = savedFile.getUrl();
-      }
-    }
-    
-    // Masukkan ke Spreadsheet
-    sheet.appendRow([
-      new Date(), data.regNo, data.namaSiswa, "'" + data.nisn, "'" + data.nikSiswa,
-      data.jenisKelamin, data.tempatLahir, data.tanggalLahir, data.agama,
-      data.asalSekolah, data.alamatLengkap, data.namaAyah, data.pekerjaanAyah,
-      data.namaIbu, data.pekerjaanIbu, "'" + data.noWhatsapp, data.namaWali || "-",
-      fileUrls['PasFoto'] || "-", fileUrls['KK'] || "-", fileUrls['BuktiTransfer'] || "-", fileUrls['Akte'] || "-"
-    ]);
-    
-    return ContentService.createTextOutput(JSON.stringify({result: "success"}))
-                         .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({result: "error", message: err.toString()}))
-                         .setMimeType(ContentService.MimeType.JSON);
-  }
-}</code></pre>
-            </div>
-
-            <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-xs text-blue-900 space-y-1">
-                <p class="font-bold"><i class="fa-solid fa-circle-info"></i> Langkah Publikasi Apps Script:</p>
-                <ol class="list-decimal pl-4 space-y-0.5">
-                    <li>Buka Google Sheets Panitia &rarr; Menu <b>Ekstensi</b> &rarr; <b>Apps Script</b>.</li>
-                    <li>Hapus kode lama, paste kode hijau di atas, klik <b>Simpan</b>.</li>
-                    <li>Klik <b>Terapkan (Deploy)</b> &rarr; <b>Penerapan Baru</b>.</li>
-                    <li>Pilih Jenis: <b>Aplikasi Web</b>.</li>
-                    <li>Jalankan sebagai: <b>Saya (Email Anda)</b>.</li>
-                    <li>Siapa yang memiliki akses: <b>Siapa saja (Anyone)</b> &rarr; Klik <b>Terapkan</b>.</li>
-                </ol>
-            </div>
-
-            <div class="mt-4 flex justify-end">
-                <button onclick="closeScriptGuideModal()" class="px-5 py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition">Selesai / Mengerti</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxvsD1RGn_2hXZoh85MtAUECAmVNi3shylqTJNckI24FmRcJC-THBXfE3ScIVkDX4z/exec"; 
         
@@ -728,13 +652,6 @@
         }
         function closeCheckStatusModal() {
             document.getElementById('checkModal').classList.add('hidden');
-        }
-
-        function openScriptGuideModal() {
-            document.getElementById('scriptGuideModal').classList.remove('hidden');
-        }
-        function closeScriptGuideModal() {
-            document.getElementById('scriptGuideModal').classList.add('hidden');
         }
 
         function performCheckStatus() {
