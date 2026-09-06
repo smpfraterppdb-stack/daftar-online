@@ -389,7 +389,7 @@
         // =========================================================================
         // TEMPELKAN URL APPS SCRIPT DI SINI (SATU KALI UNTUK SEMUA PENDAFTAR)
         // =========================================================================
-        const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1QW6VWnjwA-Bib2_urfdxNucPo9laYXKQYxSrUvBqQfDHg3sdCoaRWv8DCNJWTw7W/exec"; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
+        const DEFAULT_PANITIA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdjBCMnZJi28xfH-BPg4z359zd1c_JdO-4_iCKqCwMC6iK7qqkGWz0VM5HncM2NlyA/exec"; // <-- PASTE URL APPS SCRIPT ANDA DI DALAM TANDA PETIK INI!
         
         let googleAppsScriptUrl = DEFAULT_PANITIA_SCRIPT_URL;
 
@@ -545,13 +545,14 @@
 
                 // Generate Unique Reg No
                 const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
+                formData.regNo = regNo;
 
                 // Send via fetch to Google Apps Script Backend if URL exists
                 if (googleAppsScriptUrl) {
                     await fetch(googleAppsScriptUrl, {
                         method: 'POST',
                         mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(formData)
                     });
                 }
