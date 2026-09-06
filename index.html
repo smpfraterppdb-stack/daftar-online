@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPMB Online - SMP Farter Mamasa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .bg-school {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+        .step-active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .step-done {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white shadow-md border-b-4 border-blue-700 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <img id="school-logo" src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=SMP+Farter';" 
+                     alt="Logo SMP Farter Mamasa" class="h-16 w-16 object-contain rounded-full border shadow-sm">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-blue-950 uppercase tracking-wide">SMP Farter Mamasa</h1>
+                    <p class="text-xs sm:text-sm text-gray-600 font-medium">Sistem Penerimaan Murid Baru (SPMB) Online</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openScriptModal()" class="px-3 py-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg shadow transition flex items-center gap-1">
+                    <i class="fa-solid fa-gear"></i> Setup Backend Drive
+                </button>
+                <button onclick="openCheckStatusModal()" class="px-3 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg shadow transition flex items-center gap-1">
+                    <i class="fa-solid fa-magnifying-glass"></i> Cek Status Status
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner Hero -->
+    <section class="bg-school text-white py-8 px-4 text-center shadow-inner">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-2">Pendaftaran Siswa Baru Tahun Ajaran 2026/2027</h2>
+            <p class="text-blue-100 text-sm sm:text-base max-w-2xl mx-auto">Selamat datang calon siswa SMP Farter Mamasa. Silakan lengkapi formulir pendaftaran di bawah ini dengan data yang benar dan unggah dokumen persyaratan secara lengkap.</p>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow">
+        
+        <!-- Progress Steps -->
+        <div class="mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center text-xs sm:text-sm font-semibold">
+                <div class="flex flex-col items-center flex-1">
+                    <div id="step-btn-1" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center mb-1 step-active transition">1</div>
+                    <span class="text-gray-700 text-center">Data Siswa</span>
+                </div>
+                <div class="h-1 bg-gray-200 flex-1 mx-1"></div>
+                <div class="flex flex-col items-center flex-1">
+                    <div id="step-btn-2" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center mb-1 text-gray-500 transition">2</div>
+                    <span class="text-gray-700 text-center">Orang Tua/Wali</span>
+                </div>
+                <div class="h-1 bg-gray-200 flex-1 mx-1"></div>
+                <div class="flex flex-col items-center flex-1">
+                    <div id="step-btn-3" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center mb-1 text-gray-500 transition">3</div>
+                    <span class="text-gray-700 text-center">Upload Berkas</span>
+                </div>
+                <div class="h-1 bg-gray-200 flex-1 mx-1"></div>
+                <div class="flex flex-col items-center flex-1">
+                    <div id="step-btn-4" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center mb-1 text-gray-500 transition">4</div>
+                    <span class="text-gray-700 text-center">Konfirmasi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Wrapper -->
+        <form id="spmbForm" onsubmit="handleFormSubmit(event)" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden p-6 sm:p-8">
+
+            <!-- STEP 1: Data Calon Siswa -->
+            <div id="step-1" class="step-content space-y-6">
+                <div class="border-b pb-3 mb-4">
+                    <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-user-graduate text-blue-600"></i> Data Calon Murid Baru
+                    </h3>
+                    <p class="text-xs text-gray-500">Isi data pribadi calon siswa sesuai ijazah/akta kelahiran.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Lengkap Siswa *</label>
+                        <input type="text" id="namaSiswa" required placeholder="Contoh: Maria Gabriel"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">NISN (Nomor Induk Siswa Nasional) *</label>
+                        <input type="number" id="nisn" required placeholder="10 digit NISN"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">NIK Siswa *</label>
+                        <input type="number" id="nikSiswa" required placeholder="16 digit NIK"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin *</label>
+                        <select id="jenisKelamin" required class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                            <option value="">-- Pilih Jenis Kelamin --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Tempat Lahir *</label>
+                        <input type="text" id="tempatLahir" required placeholder="Mamasa"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Lahir *</label>
+                        <input type="date" id="tanggalLahir" required
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Agama *</label>
+                        <select id="agama" required class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                            <option value="">-- Pilih Agama --</option>
+                            <option value="Kristen Protestan">Kristen Protestan</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Asal Sekolah SD/MI *</label>
+                        <input type="text" id="asalSekolah" required placeholder="SDN 001 Mamasa"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Alamat Lengkap Tempat Tinggal *</label>
+                    <textarea id="alamatLengkap" rows="3" required placeholder="Jl. Poros Mamasa, Kec. Mamasa, Kab. Mamasa"
+                              class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button type="button" onclick="nextStep(2)" class="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        Lanjut Ke Data Orang Tua <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Data Orang Tua / Wali -->
+            <div id="step-2" class="step-content space-y-6 hidden">
+                <div class="border-b pb-3 mb-4">
+                    <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-blue-600"></i> Data Orang Tua / Wali
+                    </h3>
+                    <p class="text-xs text-gray-500">Isi data kontak orang tua yang bisa dihubungi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Ayah Kandung *</label>
+                        <input type="text" id="namaAyah" required placeholder="Nama Ayah"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Pekerjaan Ayah *</label>
+                        <input type="text" id="pekerjaanAyah" required placeholder="PNS / Petani / Swasta"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Ibu Kandung *</label>
+                        <input type="text" id="namaIbu" required placeholder="Nama Ibu"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Pekerjaan Ibu *</label>
+                        <input type="text" id="pekerjaanIbu" required placeholder="Ibu Rumah Tangga / PNS / Swasta"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">No. WhatsApp / HP Aktif *</label>
+                        <input type="tel" id="noWhatsapp" required placeholder="081234567890"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Wali (Opsional)</label>
+                        <input type="text" id="namaWali" placeholder="Isi jika tinggal bersama wali"
+                               class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button type="button" onclick="nextStep(1)" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali
+                    </button>
+                    <button type="button" onclick="nextStep(3)" class="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        Lanjut Upload Berkas <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Upload Berkas Dokumen -->
+            <div id="step-3" class="step-content space-y-6 hidden">
+                <div class="border-b pb-3 mb-4">
+                    <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i> Upload Berkas Persyaratan
+                    </h3>
+                    <p class="text-xs text-gray-500">Format yang diperbolehkan: JPG, PNG, atau PDF (Maksimal 5MB per berkas). Semua berkas tersimpan ke Google Drive sekolah.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- File 1: Pas Foto -->
+                    <div class="border border-dashed border-gray-300 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 transition">
+                        <label class="block text-xs font-bold text-gray-800 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-image text-blue-600"></i> 1. Pas Foto Calon Siswa (3x4) *
+                        </label>
+                        <input type="file" id="fileFoto" accept="image/*,.pdf" required class="w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
+                    </div>
+
+                    <!-- File 2: KK -->
+                    <div class="border border-dashed border-gray-300 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 transition">
+                        <label class="block text-xs font-bold text-gray-800 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-blue-600"></i> 2. Kartu Keluarga (KK) *
+                        </label>
+                        <input type="file" id="fileKk" accept="image/*,.pdf" required class="w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
+                    </div>
+
+                    <!-- File 3: Bukti Transfer -->
+                    <div class="border border-dashed border-gray-300 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 transition">
+                        <label class="block text-xs font-bold text-gray-800 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-receipt text-blue-600"></i> 3. Bukti Transfer Biaya Pendaftaran *
+                        </label>
+                        <input type="file" id="fileTransfer" accept="image/*,.pdf" required class="w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
+                    </div>
+
+                    <!-- File 4: Akte Birth -->
+                    <div class="border border-dashed border-gray-300 p-4 rounded-xl bg-gray-50 hover:bg-blue-50 transition">
+                        <label class="block text-xs font-bold text-gray-800 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-file-invoice text-blue-600"></i> 4. Akte Kelahiran *
+                        </label>
+                        <input type="file" id="fileAkte" accept="image/*,.pdf" required class="w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button type="button" onclick="nextStep(2)" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali
+                    </button>
+                    <button type="button" onclick="reviewSummary()" class="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        Tinjau & Ringkasan <i class="fa-solid fa-check-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Konfirmasi & Kirim -->
+            <div id="step-4" class="step-content space-y-6 hidden">
+                <div class="border-b pb-3 mb-4">
+                    <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-check text-blue-600"></i> Konfirmasi Data Pendaftaran
+                    </h3>
+                    <p class="text-xs text-gray-500">Periksa kembali data Anda sebelum menekan tombol Kirim.</p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-5 text-sm space-y-3 border border-gray-200">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border-b pb-2">
+                        <div><span class="text-gray-500 text-xs block">Nama Lengkap:</span><strong id="summaryNama" class="text-gray-800"></strong></div>
+                        <div><span class="text-gray-500 text-xs block">NISN / NIK:</span><strong id="summaryNisnNik" class="text-gray-800"></strong></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border-b pb-2">
+                        <div><span class="text-gray-500 text-xs block">TTL / Jenis Kelamin:</span><strong id="summaryTtlJk" class="text-gray-800"></strong></div>
+                        <div><span class="text-gray-500 text-xs block">Asal Sekolah:</span><strong id="summarySekolah" class="text-gray-800"></strong></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border-b pb-2">
+                        <div><span class="text-gray-500 text-xs block">Nama Orang Tua (Ayah/Ibu):</span><strong id="summaryOrangTua" class="text-gray-800"></strong></div>
+                        <div><span class="text-gray-500 text-xs block">No. WhatsApp / HP:</span><strong id="summaryWa" class="text-gray-800"></strong></div>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 text-xs block">Status Berkas Lampiran:</span>
+                        <div id="summaryFiles" class="flex flex-wrap gap-2 mt-1"></div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg text-xs text-amber-800">
+                    <p class="font-bold mb-1"><i class="fa-solid fa-circle-exclamation"></i> Pernyataan Pendaftaran:</p>
+                    <p>Dengan menekan tombol kirim, saya menyatakan bahwa seluruh data yang diisikan adalah benar dan dapat dipertanggungjawabkan.</p>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button type="button" onclick="nextStep(3)" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Ubah Data
+                    </button>
+                    <button type="submit" id="submitBtn" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Sekarang
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-white text-center py-4 px-4 text-xs border-t">
+        <p>&copy; 2026 SMP Farter Mamasa. Hak Cipta Dilindungi Undang-Undang.</p>
+        <p class="text-blue-300 mt-1">Dihubungkan ke Google Drive: Folder Dokumen Form & Folder Berkas Terupload</p>
+    </footer>
+
+    <!-- MODAL CETAK BUKTI -->
+    <div id="receiptModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeReceiptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div id="printableArea" class="p-4 border rounded-xl bg-white space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-blue-900 pb-3">
+                    <div class="flex items-center gap-3">
+                        <img src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=SMP+Farter';" 
+                             class="h-12 w-12 object-contain">
+                        <div>
+                            <h4 class="font-bold text-sm text-blue-950">SMP FARTER MAMASA</h4>
+                            <p class="text-[10px] text-gray-500">Bukti Pendaftaran Siswa Baru SPMB 2026</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-1 rounded">TERDAFTAR</span>
+                </div>
+
+                <div class="text-center py-2 bg-blue-50 rounded-lg">
+                    <p class="text-xs text-gray-500">Nomor Registrasi SPMB</p>
+                    <p id="receiptRegNo" class="text-lg font-mono font-bold text-blue-900">SPMB-2026-000</p>
+                </div>
+
+                <table class="w-full text-xs text-left">
+                    <tr class="border-b"><td class="py-1.5 text-gray-500">Nama Siswa:</td><td id="receiptNama" class="py-1.5 font-bold"></td></tr>
+                    <tr class="border-b"><td class="py-1.5 text-gray-500">NISN / NIK:</td><td id="receiptNisn" class="py-1.5 font-bold"></td></tr>
+                    <tr class="border-b"><td class="py-1.5 text-gray-500">TTL:</td><td id="receiptTtl" class="py-1.5 font-bold"></td></tr>
+                    <tr class="border-b"><td class="py-1.5 text-gray-500">Asal Sekolah:</td><td id="receiptSekolah" class="py-1.5 font-bold"></td></tr>
+                    <tr class="border-b"><td class="py-1.5 text-gray-500">No. WhatsApp:</td><td id="receiptWa" class="py-1.5 font-bold"></td></tr>
+                    <tr><td class="py-1.5 text-gray-500">Tanggal Daftar:</td><td id="receiptTanggal" class="py-1.5 font-bold"></td></tr>
+                </table>
+
+                <div class="text-[10px] text-gray-500 bg-gray-50 p-2.5 rounded border text-center">
+                    Simpan dan cetak bukti pendaftaran ini. Panitia SPMB SMP Farter Mamasa akan menghubungi Anda melalui WhatsApp untuk tahap verifikasi lanjutan.
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button onclick="window.print()" class="flex-1 py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                </button>
+                <button onclick="closeReceiptModal()" class="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-300 transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CARI / CEK STATUS -->
+    <div id="checkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeCheckStatusModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-base font-bold text-blue-950 mb-3"><i class="fa-solid fa-magnifying-glass text-blue-600"></i> Cek Status Pendaftaran</h3>
+            <p class="text-xs text-gray-600 mb-4">Masukkan NISN atau Nomor Registrasi yang telah didaftarkan.</p>
+            <input type="text" id="checkNisnInput" placeholder="Contoh: 10 digit NISN / SPMB-2026-xxx" class="w-full px-3 py-2 text-sm border rounded-lg outline-none mb-3">
+            <button onclick="performCheckStatus()" class="w-full py-2 bg-blue-700 text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition">Cari Pendaftaran</button>
+            <div id="checkResult" class="mt-4 text-xs hidden"></div>
+        </div>
+    </div>
+
+    <!-- MODAL PANDUAN CONFIG BACKEND GOOGLE APPS SCRIPT -->
+    <div id="scriptModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto text-xs text-gray-700">
+            <button onclick="closeScriptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-base font-bold text-blue-950 mb-2 flex items-center gap-2">
+                <i class="fa-brands fa-google-drive text-amber-500 text-lg"></i> Panduan Hubungkan Ke Google Drive Anda
+            </h3>
+            <p class="mb-3">Aplikasi ini berjalan di <strong>GitHub Pages</strong>. Agar formulir dan upload berkas otomatis masuk ke folder Google Drive Anda, masukkan URL Web App Google Apps Script di bawah ini:</p>
+
+            <div class="mb-4">
+                <label class="block font-bold text-gray-800 mb-1">URL Google Apps Script Deployment:</label>
+                <div class="flex gap-2">
+                    <input type="url" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3 py-2 border rounded-lg outline-none text-xs">
+                    <button onclick="saveScriptUrl()" class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">Simpan URL</button>
+                </div>
+            </div>
+
+            <hr class="my-3">
+
+            <p class="font-bold text-blue-900 mb-1">Langkah Mudah Membuat Script di Google Drive (Cukup 1 Kali Setup):</p>
+            <ol class="list-decimal pl-4 space-y-1.5 mb-3">
+                <li>Buka <a href="https://script.google.com" target="_blank" class="text-blue-600 underline">script.google.com</a> lalu klik <strong>New Project</strong>.</li>
+                <li>Salin (copy) kode Apps Script di bawah ini dan tempelkan ke editor Apps Script tersebut.</li>
+                <li>Klik <strong>Deploy > New Deployment</strong>. Pilih type <strong>Web App</strong>.</li>
+                <li>Set <strong>Execute as: Me</strong> dan <strong>Who has access: Anyone</strong>.</li>
+                <li>Klik <strong>Deploy</strong>, salin URL yang dihasilkan, lalu masukkan pada kolom di atas!</li>
+            </ol>
+
+            <div class="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto relative group">
+                <button onclick="copyAppsScriptCode()" class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded">Copy Code</button>
+<pre id="appsScriptCode" class="font-mono text-[11px] leading-relaxed">
+// KODE GOOGLE APPS SCRIPT UNTUK SMP FARTER MAMASA
+const FOLDER_DOC_ID = "1dJVlX6xYOHUc2H5TsP9A7Z_rgSF9xiEY";
+const FOLDER_BERKAS_ID = "1-LGTdy1XyHR0gefvSyGqEEwIu7XrgWCC";
+const DOC_TEMPLATE_ID = "1GrTCFV0pdszmc1YenSbQLJ_5XpRAWjFSm2MIHKPhBlE";
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const targetFolderDoc = DriveApp.getFolderById(FOLDER_DOC_ID);
+    const targetFolderBerkas = DriveApp.getFolderById(FOLDER_BERKAS_ID);
+    
+    // 1. Buat Dokumen Formulir khusus siswa dari Template
+    let newDocFile;
+    if (DOC_TEMPLATE_ID) {
+      const templateFile = DriveApp.getFileById(DOC_TEMPLATE_ID);
+      newDocFile = templateFile.makeCopy("Formulir - " + data.namaSiswa, targetFolderDoc);
+      const doc = DocumentApp.openById(newDocFile.getId());
+      const body = doc.getBody();
+      
+      body.replaceText("{{NAMA_SISWA}}", data.namaSiswa || "");
+      body.replaceText("{{NISN}}", data.nisn || "");
+      body.replaceText("{{NIK}}", data.nikSiswa || "");
+      body.replaceText("{{TTL}}", (data.tempatLahir + ", " + data.tanggalLahir) || "");
+      body.replaceText("{{JK}}", data.jenisKelamin || "");
+      body.replaceText("{{AGAMA}}", data.agama || "");
+      body.replaceText("{{SEKOLAH_ASAL}}", data.asalSekolah || "");
+      body.replaceText("{{ALAMAT}}", data.alamatLengkap || "");
+      body.replaceText("{{AYAH}}", data.namaAyah || "");
+      body.replaceText("{{IBU}}", data.namaIbu || "");
+      body.replaceText("{{WA}}", data.noWhatsapp || "");
+      doc.saveAndClose();
+    }
+    
+    // 2. Simpan Berkas Upload (Foto, KK, Bukti Transfer, Akte)
+    const fileUrls = {};
+    if (data.files && data.files.length > 0) {
+      data.files.forEach(f => {
+        const fileBlob = Utilities.newBlob(Utilities.base64Decode(f.base64), f.mimeType, f.name);
+        const uploadedFile = targetFolderBerkas.createFile(fileBlob);
+        fileUrls[f.type] = uploadedFile.getUrl();
+      });
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      message: "Data pendaftaran berhasil tersimpan ke Google Drive!",
+      docUrl: newDocFile ? newDocFile.getUrl() : ""
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      message: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Store Backend URL in LocalStorage
+        let googleAppsScriptUrl = localStorage.getItem('spmb_script_url') || '';
+
+        // Form Step Navigation
+        function nextStep(stepNumber) {
+            // Validation step 1
+            if (stepNumber === 2) {
+                const req1 = ['namaSiswa', 'nisn', 'nikSiswa', 'jenisKelamin', 'tempatLahir', 'tanggalLahir', 'agama', 'asalSekolah', 'alamatLengkap'];
+                for (let id of req1) {
+                    if (!document.getElementById(id).value.trim()) {
+                        Swal.fire('Mohon Lengkapi', 'Silakan isi seluruh kolom data siswa sebelum melanjutkan.', 'warning');
+                        return;
+                    }
+                }
+            }
+            // Validation step 2
+            if (stepNumber === 3) {
+                const req2 = ['namaAyah', 'pekerjaanAyah', 'namaIbu', 'pekerjaanIbu', 'noWhatsapp'];
+                for (let id of req2) {
+                    if (!document.getElementById(id).value.trim()) {
+                        Swal.fire('Mohon Lengkapi', 'Silakan isi data orang tua dan WhatsApp.', 'warning');
+                        return;
+                    }
+                }
+            }
+
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show target step
+            document.getElementById(`step-${stepNumber}`).classList.remove('hidden');
+
+            // Update step Indicators
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                if (i < stepNumber) {
+                    btn.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center mb-1 step-done transition";
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (i === stepNumber) {
+                    btn.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center mb-1 step-active transition";
+                    btn.innerHTML = i;
+                } else {
+                    btn.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-300 flex items-center justify-center mb-1 text-gray-500 transition";
+                    btn.innerHTML = i;
+                }
+            }
+        }
+
+        // Review Summary Step 4
+        function reviewSummary() {
+            // Validate step 3 files
+            const files = ['fileFoto', 'fileKk', 'fileTransfer', 'fileAkte'];
+            for (let id of files) {
+                if (document.getElementById(id).files.length === 0) {
+                    Swal.fire('Berkas Belum Lengkap', 'Wajib mengunggah Pas Foto, Kartu Keluarga, Bukti Transfer, dan Akte Kelahiran.', 'warning');
+                    return;
+                }
+            }
+
+            document.getElementById('summaryNama').innerText = document.getElementById('namaSiswa').value;
+            document.getElementById('summaryNisnNik').innerText = `${document.getElementById('nisn').value} / ${document.getElementById('nikSiswa').value}`;
+            document.getElementById('summaryTtlJk').innerText = `${document.getElementById('tempatLahir').value}, ${document.getElementById('tanggalLahir').value} (${document.getElementById('jenisKelamin').value})`;
+            document.getElementById('summarySekolah').innerText = document.getElementById('asalSekolah').value;
+            document.getElementById('summaryOrangTua').innerText = `${document.getElementById('namaAyah').value} / ${document.getElementById('namaIbu').value}`;
+            document.getElementById('summaryWa').innerText = document.getElementById('noWhatsapp').value;
+
+            // Display file statuses
+            const fileContainer = document.getElementById('summaryFiles');
+            fileContainer.innerHTML = '';
+            const fileLabels = [
+                {id: 'fileFoto', label: 'Foto'},
+                {id: 'fileKk', label: 'KK'},
+                {id: 'fileTransfer', label: 'Bukti Transfer'},
+                {id: 'fileAkte', label: 'Akte Kelahiran'}
+            ];
+
+            fileLabels.forEach(f => {
+                const name = document.getElementById(f.id).files[0]?.name || 'Tidak ada';
+                fileContainer.innerHTML += `<span class="bg-blue-100 text-blue-800 text-[11px] font-medium px-2 py-1 rounded border border-blue-200"><i class="fa-solid fa-file"></i> ${f.label}: ${name}</span>`;
+            });
+
+            nextStep(4);
+        }
+
+        // Helper File to Base64
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Handle Form Submission
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses & Mengirim ke Drive...';
+
+            Swal.fire({
+                title: 'Mengirim Data...',
+                text: 'Mengeposkan formulir dan mengunggah dokumen ke Google Drive SMP Farter Mamasa.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                // Read All Files
+                const namaSiswaClean = document.getElementById('namaSiswa').value.replace(/[^a-zA-Z0-9]/g, "_");
+                const fileInputs = [
+                    { id: 'fileFoto', type: 'PasFoto', name: `PasFoto_${namaSiswaClean}_` + document.getElementById('fileFoto').files[0].name },
+                    { id: 'fileKk', type: 'KK', name: `KK_${namaSiswaClean}_` + document.getElementById('fileKk').files[0].name },
+                    { id: 'fileTransfer', type: 'BuktiTransfer', name: `BuktiTransfer_${namaSiswaClean}_` + document.getElementById('fileTransfer').files[0].name },
+                    { id: 'fileAkte', type: 'Akte', name: `Akte_${namaSiswaClean}_` + document.getElementById('fileAkte').files[0].name }
+                ];
+
+                const processedFiles = [];
+                for (let item of fileInputs) {
+                    const fileObj = document.getElementById(item.id).files[0];
+                    if (fileObj) {
+                        const base64Data = await readFileAsBase64(fileObj);
+                        processedFiles.push({
+                            type: item.type,
+                            name: item.name,
+                            mimeType: fileObj.type,
+                            base64: base64Data
+                        });
+                    }
+                }
+
+                // Construct Data Object
+                const formData = {
+                    namaSiswa: document.getElementById('namaSiswa').value,
+                    nisn: document.getElementById('nisn').value,
+                    nikSiswa: document.getElementById('nikSiswa').value,
+                    jenisKelamin: document.getElementById('jenisKelamin').value,
+                    tempatLahir: document.getElementById('tempatLahir').value,
+                    tanggalLahir: document.getElementById('tanggalLahir').value,
+                    agama: document.getElementById('agama').value,
+                    asalSekolah: document.getElementById('asalSekolah').value,
+                    alamatLengkap: document.getElementById('alamatLengkap').value,
+                    namaAyah: document.getElementById('namaAyah').value,
+                    pekerjaanAyah: document.getElementById('pekerjaanAyah').value,
+                    namaIbu: document.getElementById('namaIbu').value,
+                    pekerjaanIbu: document.getElementById('pekerjaanIbu').value,
+                    noWhatsapp: document.getElementById('noWhatsapp').value,
+                    namaWali: document.getElementById('namaWali').value,
+                    files: processedFiles
+                };
+
+                // Generate Unique Reg No
+                const regNo = 'SPMB-2026-' + Math.floor(1000 + Math.random() * 9000);
+
+                // If Google Apps Script URL exists, send via fetch
+                if (googleAppsScriptUrl) {
+                    await fetch(googleAppsScriptUrl, {
+                        method: 'POST',
+                        mode: 'no-cors', // Standard Google Apps Script cross-origin
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                // Store local record for receipt/lookup
+                const existingRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                formData.regNo = regNo;
+                formData.tglDaftar = new Date().toLocaleDateString('id-ID');
+                existingRecords.push(formData);
+                localStorage.getItem('spmb_records', JSON.stringify(existingRecords));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pendaftaran Berhasil!',
+                    text: 'Formulir dan berkas Anda telah terinput otomatis ke Google Drive SMP Farter Mamasa.',
+                    confirmButtonText: 'Cetak Bukti Pendaftaran'
+                }).then(() => {
+                    showReceipt(formData);
+                });
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Terjadi Kesalahan', 'Gagal mengunggah berkas: ' + err.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Sekarang';
+            }
+        }
+
+        // Show Receipt Modal
+        function showReceipt(data) {
+            document.getElementById('receiptRegNo').innerText = data.regNo || 'SPMB-2026-001';
+            document.getElementById('receiptNama').innerText = data.namaSiswa;
+            document.getElementById('receiptNisn').innerText = `${data.nisn} / ${data.nikSiswa}`;
+            document.getElementById('receiptTtl').innerText = `${data.tempatLahir}, ${data.tanggalLahir}`;
+            document.getElementById('receiptSekolah').innerText = data.asalSekolah;
+            document.getElementById('receiptWa').innerText = data.noWhatsapp;
+            document.getElementById('receiptTanggal').innerText = data.tglDaftar || new Date().toLocaleDateString('id-ID');
+
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
+        }
+
+        // Check Status Functions
+        function openCheckStatusModal() {
+            document.getElementById('checkModal').classList.remove('hidden');
+            document.getElementById('checkResult').classList.add('hidden');
+        }
+        function closeCheckStatusModal() {
+            document.getElementById('checkModal').classList.add('hidden');
+        }
+        function performCheckStatus() {
+            const query = document.getElementById('checkNisnInput').value.trim();
+            const resDiv = document.getElementById('checkResult');
+            resDiv.classList.remove('hidden');
+
+            const records = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+            const match = records.find(r => r.nisn === query || r.regNo === query);
+
+            if (match) {
+                resDiv.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 p-3 rounded-lg text-green-900">
+                        <p class="font-bold"><i class="fa-solid fa-circle-check"></i> Data Ditemukan!</p>
+                        <p class="mt-1">Nama: <strong>${match.namaSiswa}</strong></p>
+                        <p>No. Registrasi: <strong>${match.regNo}</strong></p>
+                        <p>Status: <span class="bg-green-200 text-green-800 px-1.5 py-0.5 rounded font-semibold text-[10px]">Tersimpan di Drive</span></p>
+                        <button onclick="closeCheckStatusModal(); showReceipt(match)" class="mt-2 text-xs bg-green-700 text-white px-3 py-1 rounded font-bold hover:bg-green-800">Buka Bukti Pendaftaran</button>
+                    </div>
+                `;
+            } else {
+                resDiv.innerHTML = `
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-900">
+                        <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Tidak Ditemukan</p>
+                        <p class="mt-1">Pendaftaran dengan NISN/No Reg "${query}" belum ditemukan di browser ini. Jika baru mendaftar di perangkat lain, berkas sudah tersimpan langsung di Drive Panitia.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Apps Script Config Modal
+        function openScriptModal() {
+            document.getElementById('scriptUrlInput').value = googleAppsScriptUrl;
+            document.getElementById('scriptModal').classList.remove('hidden');
+        }
+        function closeScriptModal() {
+            document.getElementById('scriptModal').classList.add('hidden');
+        }
+        function saveScriptUrl() {
+            const url = document.getElementById('scriptUrlInput').value.trim();
+            googleAppsScriptUrl = url;
+            localStorage.setItem('spmb_script_url', url);
+            Swal.fire('Tersimpan', 'URL Google Apps Script Backend telah berhasil disimpan.', 'success');
+            closeScriptModal();
+        }
+        function copyAppsScriptCode() {
+            const code = document.getElementById('appsScriptCode').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Kode Apps Script disalin!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            });
+        }
+    </script>
+</body>
+</html>
