@@ -390,14 +390,21 @@
             });
         }
 
-        async function handleFormSubmit(event) {
-            event.preventDefault();
+      // Ganti bagian di dalam handleFormSubmit yang berhubungan dengan localStorage dengan kode ini:
 
-            const btnSubmit = document.getElementById('btn-submit-form');
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengirim & Menyimpan ke Drive...</span>`;
+                // Simpan hanya data teks ringkas saja ke LocalStorage (tanpa file base64 yang besar)
+                const lightData = { ...formData };
+                delete lightData.fileFoto;
+                delete lightData.fileKk;
+                delete lightData.fileAkta;
+                delete lightData.fileTransfer;
 
-            try {
+                submittedRecords.push(lightData);
+                try {
+                    localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
+                } catch (storageErr) {
+                    console.warn('Storage penuh, namun pengiriman ke Drive tetap diproses.');
+                }
                 // Ambil file upload dalam bentuk Base64
                 const fileFoto = await readFileAsBase64(document.getElementById('fileFoto').files[0]);
                 const fileKk = await readFileAsBase64(document.getElementById('fileKk').files[0]);
