@@ -18,9 +18,6 @@
             <button onclick="switchTab('beranda')" class="nav-btn hover:text-amber-400 transition" id="nav-beranda">Beranda</button>
             <button onclick="switchTab('pendaftaran')" class="nav-btn hover:text-amber-400 transition" id="nav-pendaftaran">Form Pendaftaran</button>
             <button onclick="switchTab('cek-status')" class="nav-btn hover:text-amber-400 transition" id="nav-cek-status">Cek Status & Cetak</button>
-            <button onclick="switchTab('panduan-drive')" class="nav-btn hover:text-amber-300 transition text-amber-300 font-semibold" id="nav-panduan-drive">
-                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Status Koneksi Drive
-            </button>
         </nav>
 
         <button onclick="toggleMobileMenu()" class="md:hidden text-2xl focus:outline-none">
@@ -33,25 +30,24 @@
         <button onclick="switchTab('beranda'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Beranda</button>
         <button onclick="switchTab('pendaftaran'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Form Pendaftaran</button>
         <button onclick="switchTab('cek-status'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Cek Status & Cetak</button>
-        <button onclick="switchTab('panduan-drive'); toggleMobileMenu();" class="block w-full text-left py-2 text-amber-300 font-semibold">Status Koneksi & Apps Script</button>
     </div>
 </header>
 
 <!-- Main Content Area -->
 <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
-    <!-- Banner Notifikasi Koneksi Google Drive -->
-    <div id="drive-status-banner" class="no-print mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r shadow-sm flex items-start justify-between">
+    <!-- Banner Selamat Datang -->
+    <div id="welcome-banner" class="no-print mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r shadow-sm flex items-start justify-between">
         <div class="flex items-start space-x-3">
-            <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5"></i>
-            <div class="text-sm text-emerald-900">
-                <p class="font-semibold">Terhubung Otomatis ke Google Drive Sekolah</p>
-                <p class="text-xs text-emerald-700 mt-1">
-                    Sistem telah dikonfigurasi secara otomatis menggunakan Google Apps Script. Setiap data formulir dan berkas pendaftaran calon murid baru akan langsung tersimpan ke Drive dan Google Docs sekolah.
+            <i class="fa-solid fa-circle-info text-blue-600 text-xl mt-0.5"></i>
+            <div class="text-sm text-blue-900">
+                <p class="font-semibold">Selamat Datang di Portal Resmi SPMB SMP Frater Mamasa</p>
+                <p class="text-xs text-blue-700 mt-1">
+                    Silakan isi formulir pendaftaran dengan lengkap dan benar. Setelah selesai, Anda dapat langsung mencetak Kartu Bukti Pendaftaran.
                 </p>
             </div>
         </div>
-        <button onclick="document.getElementById('drive-status-banner').remove()" class="text-emerald-600 hover:text-emerald-800">
+        <button onclick="document.getElementById('welcome-banner').remove()" class="text-blue-600 hover:text-blue-800">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
@@ -109,7 +105,7 @@
                 </div>
                 <h3 class="font-bold text-lg mb-2">3. Cetak Bukti & Selesai</h3>
                 <p class="text-slate-600 text-sm leading-relaxed">
-                    Data akan otomatis tersimpan di Google Drive sekolah, dan Anda dapat langsung mengunduh/mencetak Kartu Bukti Pendaftaran.
+                    Simpan data pendaftaran Anda dan langsung unduh atau cetak Kartu Bukti Pendaftaran resmi.
                 </p>
             </div>
         </div>
@@ -282,7 +278,7 @@
                     <h3 class="font-bold text-lg text-slate-800 border-b pb-2 flex items-center">
                         <i class="fa-solid fa-file-arrow-up text-blue-900 mr-2"></i> Unggah Berkas Persyaratan
                     </h3>
-                    <p class="text-xs text-slate-500">Semua berkas akan diunggah otomatis ke Google Drive panitia SPMB. Format yang diperbolehkan: JPG, PNG, atau PDF (Maks. 5MB per berkas).</p>
+                    <p class="text-xs text-slate-500">Unggah berkas persyaratan pendaftaran. Format yang diperbolehkan: JPG, PNG, atau PDF (Maks. 5MB per berkas).</p>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Pasfoto -->
@@ -440,155 +436,21 @@
         </div>
     </section>
 
-    <!-- TAB 4: PENGATURAN DRIVE & APPS SCRIPT CODE -->
-    <section id="tab-panduan-drive" class="tab-content hidden space-y-6">
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8">
-            <div class="flex items-center space-x-3 border-b pb-4 mb-6">
-                <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center font-bold text-xl">
-                    <i class="fa-brands fa-google-drive"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">Status Integrasi Google Drive & Apps Script</h2>
-                    <p class="text-xs text-slate-500">URL Google Apps Script sudah tertanam secara permanen dan otomatis terhubung ke sistem backend sekolah.</p>
-                </div>
-            </div>
-
-            <!-- Info URL Otomatis -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
-                <label class="block text-sm font-bold text-slate-800 mb-1">Web App Executable URL Google Apps Script (Terpasang Otomatis)</label>
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="url" id="gasScriptUrl" readonly class="flex-1 px-4 py-2 border rounded-lg text-sm bg-slate-100 text-slate-600 select-all" value="https://script.google.com/macros/s/AKfycbxzWRA0rckGGpl3CAXDRLBpnNLCo_2pFL2r7DkE3YlQaARkvABdCjOpmz5mPYhS3PuL/exec">
-                </div>
-                <p class="text-xs text-emerald-600 mt-2 font-medium">✓ Aplikasi siap digunakan tanpa perlu pengaturan manual oleh pendaftar.</p>
-            </div>
-
-            <!-- Tautan Google Drive Terkait -->
-            <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                <a href="https://docs.google.com/document/d/1GrTCFV0pdszmc1YenSbQLJ_5XpRAWjFSm2MIHKPhBlE/edit?usp=sharing" target="_blank" class="p-3 border rounded-lg bg-blue-50 text-blue-900 hover:bg-blue-100 flex items-center space-x-2">
-                    <i class="fa-solid fa-file-word text-lg"></i>
-                    <div>
-                        <p class="font-bold">Template Google Doc</p>
-                        <p class="text-[10px] text-slate-500 truncate">ID: 1GrTCFV0pdszmc1YenSbQLJ...</p>
-                    </div>
-                </a>
-                <a href="https://drive.google.com/drive/folders/1dJVlX6xYOHUc2H5TsP9A7Z_rgSF9xiEY?usp=sharing" target="_blank" class="p-3 border rounded-lg bg-amber-50 text-amber-900 hover:bg-amber-100 flex items-center space-x-2">
-                    <i class="fa-solid fa-folder text-lg"></i>
-                    <div>
-                        <p class="font-bold">Folder Hasil Form Doc</p>
-                        <p class="text-[10px] text-slate-500 truncate">ID: 1dJVlX6xYOHUc2H5TsP9A...</p>
-                    </div>
-                </a>
-                <a href="https://drive.google.com/drive/folders/1-LGTdy1XyHR0gefvSyGqEEwIu7XrgWCC?usp=sharing" target="_blank" class="p-3 border rounded-lg bg-emerald-50 text-emerald-900 hover:bg-emerald-100 flex items-center space-x-2">
-                    <i class="fa-solid fa-folder text-lg"></i>
-                    <div>
-                        <p class="font-bold">Folder Upload Berkas</p>
-                        <p class="text-[10px] text-slate-500 truncate">ID: 1-LGTdy1XyHR0gefvSyG...</p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Instructions Code Apps Script -->
-            <div class="space-y-4 text-sm text-slate-700">
-                <h3 class="font-bold text-base text-slate-900">Catatan Pengembangan Backend:</h3>
-                <p class="text-xs text-slate-600">Kode Google Apps Script di bawah ini adalah backend yang sedang berjalan pada URL Web App di atas:</p>
-
-                <div class="relative bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto font-mono">
-                    <button onclick="copyAppsScript()" class="absolute top-3 right-3 bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded text-[11px]">
-                        <i class="fa-regular fa-copy mr-1"></i> Copy Code
-                    </button>
-                    <pre id="apps-script-code">
-
-
-// === KODE GOOGLE APPS SCRIPT SMP FRATER MAMASA ===
-const TEMPLATE_DOC_ID = '1GrTCFV0pdszmc1YenSbQLJ_5XpRAWjFSm2MIHKPhBlE';
-const TARGET_DOC_FOLDER_ID = '1dJVlX6xYOHUc2H5TsP9A7Z_rgSF9xiEY';
-const TARGET_UPLOAD_FOLDER_ID = '1-LGTdy1XyHR0gefvSyGqEEwIu7XrgWCC';
-
-function doPost(e) {
-try {
-const data = JSON.parse(e.postData.contents);
-
-// 1. Buat Dokumen Baru dari Template dengan Nama Siswa
-const templateFile = DriveApp.getFileById(TEMPLATE_DOC_ID);
-const targetFolder = DriveApp.getFolderById(TARGET_DOC_FOLDER_ID);
-const newDocFile = templateFile.makeCopy('Formulir - ' + data.namaLengkap, targetFolder);
-const doc = DocumentApp.openById(newDocFile.getId());
-const body = doc.getBody();
-
-// Replace Placeholder di Google Doc Template
-body.replaceText('{{NAMA_LENGKAP}}', data.namaLengkap || '');
-body.replaceText('{{NISN}}', data.nisn || '');
-body.replaceText('{{NIK}}', data.nik || '');
-body.replaceText('{{JENIS_KELAMIN}}', data.jenisKelamin || '');
-body.replaceText('{{TEMPAT_LAHIR}}', data.tempatLahir || '');
-body.replaceText('{{TANGGAL_LAHIR}}', data.tanggalLahir || '');
-body.replaceText('{{AGAMA}}', data.agama || '');
-body.replaceText('{{SEKOLAH_ASAL}}', data.sekolahAsal || '');
-body.replaceText('{{ALAMAT}}', data.alamat || '');
-body.replaceText('{{NAMA_AYAH}}', data.namaAyah || '');
-body.replaceText('{{PEKERJAAN_AYAH}}', data.pekerjaanAyah || '');
-body.replaceText('{{NAMA_IBU}}', data.namaIbu || '');
-body.replaceText('{{PEKERJAAN_IBU}}', data.pekerjaanIbu || '');
-body.replaceText('{{NO_HP}}', data.noHp || '');
-body.replaceText('{{EMAIL}}', data.email || '');
-body.replaceText('{{NO_REG}}', data.noReg || '');
-
-doc.saveAndClose();
-
-// 2. Unggah Berkas ke Folder Upload
-const uploadFolder = DriveApp.getFolderById(TARGET_UPLOAD_FOLDER_ID);
-
-function saveFile(base64Data, originalName, prefix) {
-  if(!base64Data) return null;
-  const splitData = base64Data.split(',');
-  const contentType = splitData[0].match(/:(.*?);/)[1];
-  const bytes = Utilities.base64Decode(splitData[1]);
-  const blob = Utilities.newBlob(bytes, contentType, prefix + '_' + data.namaLengkap + '_' + originalName);
-  return uploadFolder.createFile(blob).getUrl();
-}
-
-const fotoUrl = saveFile(data.fileFoto, 'Foto.jpg', 'Pasfoto');
-const kkUrl = saveFile(data.fileKk, 'KK.pdf', 'KK');
-const aktaUrl = saveFile(data.fileAkta, 'Akta.pdf', 'Akta');
-const transferUrl = saveFile(data.fileTransfer, 'Transfer.jpg', 'BuktiTransfer');
-
-return ContentService.createTextOutput(JSON.stringify({
-  status: 'success',
-  message: 'Data dan Berkas Berhasil Disimpan ke Google Drive!',
-  docUrl: newDocFile.getUrl(),
-  noReg: data.noReg
-})).setMimeType(ContentService.MimeType.JSON);
-
-
-} catch (error) {
-return ContentService.createTextOutput(JSON.stringify({
-status: 'error',
-message: error.toString()
-})).setMimeType(ContentService.MimeType.JSON);
-}
-}
-
-
-
-
-
-
 </main>
 
 <!-- Footer -->
 <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 no-print mt-auto">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
         <p>&copy; 2026 SMP Frater Mamasa. Hak Cipta Dilindungi Undang-Undang.</p>
-        <p class="text-slate-500">Aplikasi SPMB Online dikembangkan untuk pendaftaran siswa baru yang terintegrasi langsung dengan Google Drive.</p>
+        <p class="text-slate-500">Aplikasi SPMB Online dikembangkan untuk pendaftaran siswa baru yang mudah dan cepat.</p>
     </div>
 </footer>
 
 <!-- JavaScript Application Logic -->
 <script>
-    // State Global Aplikasi & URL Google Apps Script Tetap (Hardcoded)
+    // State Global Aplikasi
     let currentStep = 1;
     let submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
-    const gasApiUrl = "https://script.google.com/macros/s/AKfycbxzWRA0rckGGpl3CAXDRLBpnNLCo_2pFL2r7DkE3YlQaARkvABdCjOpmz5mPYhS3PuL/exec";
 
     // Inisialisasi Saat Halaman Di-load
     document.addEventListener('DOMContentLoaded', () => {
@@ -692,7 +554,7 @@ message: error.toString()
 
         const btnSubmit = document.getElementById('btn-submit-form');
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Memproses & Mengunggah ke Drive...</span>`;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Memproses Pendaftaran...</span>`;
 
         try {
             // Read File Uploads
@@ -727,26 +589,18 @@ message: error.toString()
                 tanggalDaftar: new Date().toLocaleDateString('id-ID')
             };
 
-            // Kirim otomatis ke Google Apps Script API tanpa perlu pengaturan manual
-            await fetch(gasApiUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            // Simpan ke LocalStorage sebagai cadangan lokal
+            // Simpan ke LocalStorage
             submittedRecords.push(formData);
             localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
 
-            alert(`Pendaftaran Berhasil!\n\nNomor Registrasi Anda: ${noReg}\nData dan berkas telah terkirim otomatis ke Google Drive sekolah.`);
+            alert(`Pendaftaran Berhasil!\n\nNomor Registrasi Anda: ${noReg}\nData pendaftaran telah tersimpan dengan aman.`);
 
             // Tampilkan Bukti Pendaftaran
             tampilkanKartuBukti(formData);
             switchTab('cek-status');
 
         } catch (err) {
-            alert('Terjadi kesalahan saat mengirim data: ' + err.message);
+            alert('Terjadi kesalahan saat memproses data: ' + err.message);
         } finally {
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Pendaftaran</span>`;
@@ -792,13 +646,5 @@ message: error.toString()
             alert('Data pendaftaran tidak ditemukan. Pastikan NISN atau No. Registrasi sudah benar.');
             document.getElementById('hasil-pendaftaran').classList.add('hidden');
         }
-    }
-
-    // Copy Code Script
-    function copyAppsScript() {
-        const codeText = document.getElementById('apps-script-code').innerText;
-        navigator.clipboard.writeText(codeText).then(() => {
-            alert('Kode Google Apps Script berhasil disalin!');
-        });
     }
 </script>
