@@ -1,114 +1,13 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPMB Online - SMP Farter Mamasa</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Plus Jakarta Sans) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            200: '#bae0fd',
-                            500: '#0284c7',
-                            600: '#026597',
-                            700: '#034e75',
-                            800: '#073e5d',
-                            900: '#0c324a',
-                        },
-                        gold: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.06)',
-                        'glow': '0 0 20px rgba(2, 132, 199, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .step-active { @apply bg-gradient-to-r from-brand-600 to-brand-800 text-white font-bold shadow-glow ring-4 ring-brand-100 scale-105; }
-        .step-completed { @apply bg-emerald-500 text-white shadow-sm; }
-        .step-inactive { @apply bg-slate-100 text-slate-400 border border-slate-200; }
-        .input-style { @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all duration-200 text-sm md:text-base text-slate-800 placeholder-slate-400; }
-        .label-style { @apply block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 tracking-wide; }
-        
-        /* Modal & Print Styling */
-        @media print {
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
-            .no-print { display: none !important; }
-        }
-
-        /* Ambient Background Animations */
-        .bg-blob-1 {
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-        }
-        .bg-blob-2 {
-            position: absolute;
-            top: 20%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-        }
-    </style>
-</head>
-<body class="bg-slate-50/80 text-slate-800 font-sans min-h-screen flex flex-col justify-between relative overflow-x-hidden selection:bg-brand-500 selection:text-white">
-
-    <!-- Ambient Decorative Blobs -->
-    <div class="bg-blob-1"></div>
-    <div class="bg-blob-2"></div>
-
-    <!-- Header / Navbar Utama -->
-    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-sm transition-all">
-        <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
-            <div class="flex items-center space-x-3.5">
-                <div class="relative">
-                    <img id="school-logo" src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=SMP+FM'" 
-                         alt="Logo SMP Farter Mamasa" 
-                         class="h-12 w-12 object-contain rounded-full border-2 border-brand-100 p-0.5 shadow-sm bg-white">
-                    <div class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 w-3.5 h-3.5 rounded-full border-2 border-white" title="Status Sistem Online"></div>
-                </div>
-                <div>
-                    <h1 class="text-base md:text-xl font-extrabold text-slate-900 tracking-tight leading-tight flex items-center gap-2">
-                        SMP FARTER MAMASA
-                    </h1>
-                    <p class="text-xs md:text-sm text-slate-500 font-medium">Sistem Penerimaan Murid Baru (SPMB) Online</p>
-                </div>
-            </div>
-
+<!-- ... existing code ... -->
             <!-- Status Lencana -->
-            <div class="hidden sm:flex items-center gap-2 bg-brand-50 px-3.5 py-1.5 rounded-full border border-brand-100">
-                <i class="fa-solid fa-graduation-cap text-brand-600 text-sm"></i>
-                <span class="text-xs font-semibold text-brand-800">T.A. 2026/2027</span>
+            <div class="hidden sm:flex items-center gap-2">
+                <button type="button" onclick="openScriptGuideModal()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3.5 py-1.5 rounded-full border border-amber-600 flex items-center gap-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-code"></i> Panduan Drive & Script
+                </button>
+                <div class="flex items-center gap-2 bg-brand-50 px-3.5 py-1.5 rounded-full border border-brand-100">
+                    <i class="fa-solid fa-graduation-cap text-brand-600 text-sm"></i>
+                    <span class="text-xs font-semibold text-brand-800">T.A. 2026/2027</span>
+                </div>
             </div>
         </div>
     </header>
@@ -120,221 +19,17 @@
                 <span class="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-sm">Resmi</span>
                 <span class="font-medium text-slate-100">Pendaftaran Murid Baru SMP Farter Mamasa Telah Dibuka.</span>
             </div>
-            <span class="text-xs text-brand-200 flex items-center gap-1.5 font-medium">
-                <i class="fa-regular fa-clock text-amber-300"></i> Layanan Pendaftaran 24 Jam Online
-            </span>
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-    <main class="max-w-4xl mx-auto px-4 py-8 md:py-10 flex-grow w-full">
-
-        <!-- Header Judul Halaman -->
-        <div class="text-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Formulir Pendaftaran Siswa Baru</h2>
-            <p class="text-xs md:text-sm text-slate-500 mt-1.5 max-w-xl mx-auto">Silakan lengkapi tahapan formulir di bawah ini secara cermat. Data akan tersimpan secara otomatis di sistem sekolah.</p>
-        </div>
-
-        <!-- Progress Step Indicator -->
-        <div class="mb-10">
-            <div class="flex items-center justify-between relative max-w-2xl mx-auto px-2">
-                <div class="absolute left-6 right-6 top-5 transform -translate-y-1/2 h-1 bg-slate-200 -z-0 rounded-full"></div>
-                <div id="progress-line" class="absolute left-6 top-5 transform -translate-y-1/2 h-1 bg-gradient-to-r from-brand-600 to-brand-700 transition-all duration-500 -z-0 rounded-full" style="width: 0%;"></div>
-
-                <!-- Step 1 -->
-                <div class="flex flex-col items-center relative z-10 cursor-pointer" onclick="goToStepIfAllowed(1)">
-                    <div id="step-indicator-1" class="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-active transition-all duration-300">
-                        <i class="fa-solid fa-user text-sm"></i>
-                    </div>
-                    <span class="text-[11px] md:text-xs font-semibold mt-2 text-slate-800">1. Data Siswa</span>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="flex flex-col items-center relative z-10 cursor-pointer" onclick="goToStepIfAllowed(2)">
-                    <div id="step-indicator-2" class="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-inactive transition-all duration-300">
-                        <i class="fa-solid fa-users text-sm"></i>
-                    </div>
-                    <span class="text-[11px] md:text-xs font-medium mt-2 text-slate-400">2. Orang Tua</span>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="flex flex-col items-center relative z-10 cursor-pointer" onclick="goToStepIfAllowed(3)">
-                    <div id="step-indicator-3" class="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-inactive transition-all duration-300">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                    </div>
-                    <span class="text-[11px] md:text-xs font-medium mt-2 text-slate-400">3. Berkas</span>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="flex flex-col items-center relative z-10 cursor-pointer" onclick="goToStepIfAllowed(4)">
-                    <div id="step-indicator-4" class="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-inactive transition-all duration-300">
-                        <i class="fa-solid fa-square-check text-sm"></i>
-                    </div>
-                    <span class="text-[11px] md:text-xs font-medium mt-2 text-slate-400">4. Konfirmasi</span>
-                </div>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="openScriptGuideModal()" class="sm:hidden text-xs text-amber-300 underline font-semibold">
+                    <i class="fa-solid fa-gear"></i> Setup Drive
+                </button>
+                <span class="text-xs text-brand-200 flex items-center gap-1.5 font-medium">
+                    <i class="fa-regular fa-clock text-amber-300"></i> Layanan Pendaftaran 24 Jam Online
+                </span>
             </div>
         </div>
-
-        <!-- Notification / Toast Container -->
-        <div id="toast-message" class="hidden mb-6 p-4 rounded-2xl border shadow-sm transition-all duration-300"></div>
-
-        <!-- Form Card Utama dengan Soft Shadow & Border Elegan -->
-        <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-glass border border-slate-200/80 overflow-hidden">
-            
-            <form id="spmb-form" onsubmit="event.preventDefault();">
-                
-                <!-- BAGIAN 1: DATA SISWA -->
-                <div id="step-1" class="p-6 md:p-10 space-y-7">
-                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-id-card"></i></span>
-                                Data Pribadi Calon Siswa
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-1">Lengkapi data pribadi siswa sesuai Akte Birth atau Kartu Keluarga (KK).</p>
-                        </div>
-                        <span class="text-xs bg-slate-100 text-slate-600 font-medium px-2.5 py-1 rounded-md">Langkah 1 dari 4</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            <label class="label-style" for="namaLengkap">Nama Lengkap Siswa <span class="text-rose-500">*</span></label>
-                            <input type="text" id="namaLengkap" name="namaLengkap" class="input-style" placeholder="Contoh: Maria Yuliana" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="nisn">NISN (Nomor Induk Siswa Nasional) <span class="text-rose-500">*</span></label>
-                            <input type="number" id="nisn" name="nisn" class="input-style" placeholder="10 Digit NISN dari SD" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="nik">NIK (Nomor Induk Kependudukan) <span class="text-rose-500">*</span></label>
-                            <input type="number" id="nik" name="nik" class="input-style" placeholder="16 Digit NIK di Kartu Keluarga" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="tempatLahir">Tempat Lahir <span class="text-rose-500">*</span></label>
-                            <input type="text" id="tempatLahir" name="tempatLahir" class="input-style" placeholder="Contoh: Mamasa" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="tanggalLahir">Tanggal Lahir <span class="text-rose-500">*</span></label>
-                            <input type="date" id="tanggalLahir" name="tanggalLahir" class="input-style" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="jenisKelamin">Jenis Kelamin <span class="text-rose-500">*</span></label>
-                            <select id="jenisKelamin" name="jenisKelamin" class="input-style bg-slate-50/50" required>
-                                <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="agama">Agama <span class="text-rose-500">*</span></label>
-                            <select id="agama" name="agama" class="input-style bg-slate-50/50" required>
-                                <option value="">-- Pilih Agama --</option>
-                                <option value="Kristen Protestan">Kristen Protestan</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Islam">Islam</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Lainnya">Lainnya</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="sekolahAsal">Sekolah Asal (SD / MI) <span class="text-rose-500">*</span></label>
-                            <input type="text" id="sekolahAsal" name="sekolahAsal" class="input-style" placeholder="Contoh: SD Negeri 001 Mamasa" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="noHpSiswa">No. WhatsApp / HP Siswa (Opsional)</label>
-                            <input type="tel" id="noHpSiswa" name="noHpSiswa" class="input-style" placeholder="08xxxxxxxxxx">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="label-style" for="alamatSiswa">Alamat Tempat Tinggal Lengkap <span class="text-rose-500">*</span></label>
-                            <textarea id="alamatSiswa" name="alamatSiswa" rows="3" class="input-style" placeholder="Nama Jalan, Desa/Kelurahan, Kecamatan, Kabupaten Mamasa" required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end pt-5 border-t border-slate-100">
-                        <button type="button" onclick="nextStep(2)" class="bg-gradient-to-r from-brand-600 to-brand-800 hover:from-brand-700 hover:to-brand-900 text-white font-semibold px-7 py-3.5 rounded-xl shadow-md transition-all duration-200 flex items-center gap-2 text-sm">
-                            Lanjut: Data Orang Tua <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- BAGIAN 2: DATA ORANG TUA / WALI -->
-                <div id="step-2" class="p-6 md:p-10 space-y-7 hidden">
-                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-users"></i></span>
-                                Data Orang Tua / Wali
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-1">Masukan informasi kontak Ayah, Ibu, atau Wali Murid yang aktif.</p>
-                        </div>
-                        <span class="text-xs bg-slate-100 text-slate-600 font-medium px-2.5 py-1 rounded-md">Langkah 2 dari 4</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="label-style" for="namaAyah">Nama Lengkap Ayah <span class="text-rose-500">*</span></label>
-                            <input type="text" id="namaAyah" name="namaAyah" class="input-style" placeholder="Nama ayah sesuai KK" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="pekerjaanAyah">Pekerjaan Ayah <span class="text-rose-500">*</span></label>
-                            <input type="text" id="pekerjaanAyah" name="pekerjaanAyah" class="input-style" placeholder="PNS/Petani/Wiraswasta/dll." required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="namaIbu">Nama Lengkap Ibu <span class="text-rose-500">*</span></label>
-                            <input type="text" id="namaIbu" name="namaIbu" class="input-style" placeholder="Nama ibu sesuai KK" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="pekerjaanIbu">Pekerjaan Ibu <span class="text-rose-500">*</span></label>
-                            <input type="text" id="pekerjaanIbu" name="pekerjaanIbu" class="input-style" placeholder="IRT/PNS/Wiraswasta/dll." required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="noHpOrtu">No. WhatsApp / HP Orang Tua (Aktif) <span class="text-rose-500">*</span></label>
-                            <input type="tel" id="noHpOrtu" name="noHpOrtu" class="input-style" placeholder="08xxxxxxxxxx" required>
-                        </div>
-
-                        <div>
-                            <label class="label-style" for="namaWali">Nama Wali (Opsional)</label>
-                            <input type="text" id="namaWali" name="namaWali" class="input-style" placeholder="Diisi jika tinggal bersama wali">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between pt-5 border-t border-slate-100">
-                        <button type="button" onclick="prevStep(1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2 text-sm">
-                            <i class="fa-solid fa-arrow-left text-xs"></i> Kembali
-                        </button>
-                        <button type="button" onclick="nextStep(3)" class="bg-gradient-to-r from-brand-600 to-brand-800 hover:from-brand-700 hover:to-brand-900 text-white font-semibold px-7 py-3.5 rounded-xl shadow-md transition-all duration-200 flex items-center gap-2 text-sm">
-                            Lanjut: Upload Berkas <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- BAGIAN 3: UPLOAD DOKUMEN -->
-                <div id="step-3" class="p-6 md:p-10 space-y-7 hidden">
-                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-cloud-arrow-up"></i></span>
-                                Upload Berkas Persyaratan
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-1">Unggah berkas resmi dalam format Gambar (JPG/PNG) atau PDF (Maksimal 5MB per berkas).</p>
-                        </div>
-                        <span class="text-xs bg-slate-100 text-slate-600 font-medium px-2.5 py-1 rounded-md">Langkah 3 dari 4</span>
-                    </div>
-
+    </div>
+<!-- ... existing code ... -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <!-- Pas Foto -->
                         <div class="group border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center hover:border-brand-500 hover:bg-brand-50/30 transition-all duration-200 bg-slate-50/40">
@@ -342,7 +37,7 @@
                                 <i class="fa-solid fa-image text-xl"></i>
                             </div>
                             <label class="block font-bold text-slate-800 text-sm mb-0.5">Pas Foto Calon Siswa (3x4) <span class="text-rose-500">*</span></label>
-                            <p class="text-[11px] text-slate-400 mb-3">Foto latar belakang merah atau biru</p>
+                            <p class="text-[11px] text-slate-400 mb-3">Foto latar belakang merah/biru (auto-kompresi)</p>
                             <input type="file" id="fileFoto" accept="image/*" class="hidden" onchange="handleFileChange(this, 'previewFoto')">
                             <button type="button" onclick="document.getElementById('fileFoto').click()" class="text-xs bg-white hover:bg-brand-50 text-brand-700 font-semibold py-2 px-4 rounded-xl border border-brand-200 shadow-sm transition">Pilih File Foto</button>
                             <div id="previewFoto" class="mt-3 text-xs text-slate-500 font-medium">Belum ada berkas dipilih</div>
@@ -354,7 +49,7 @@
                                 <i class="fa-solid fa-address-card text-xl"></i>
                             </div>
                             <label class="block font-bold text-slate-800 text-sm mb-0.5">Kartu Keluarga (KK) <span class="text-rose-500">*</span></label>
-                            <p class="text-[11px] text-slate-400 mb-3">Scan atau Foto KK yang terlihat jelas</p>
+                            <p class="text-[11px] text-slate-400 mb-3">Scan/Foto KK terang & jelas</p>
                             <input type="file" id="fileKK" accept="image/*,.pdf" class="hidden" onchange="handleFileChange(this, 'previewKK')">
                             <button type="button" onclick="document.getElementById('fileKK').click()" class="text-xs bg-white hover:bg-brand-50 text-brand-700 font-semibold py-2 px-4 rounded-xl border border-brand-200 shadow-sm transition">Pilih File KK</button>
                             <div id="previewKK" class="mt-3 text-xs text-slate-500 font-medium">Belum ada berkas dipilih</div>
@@ -366,7 +61,7 @@
                                 <i class="fa-solid fa-file-contract text-xl"></i>
                             </div>
                             <label class="block font-bold text-slate-800 text-sm mb-0.5">Akte Kelahiran <span class="text-rose-500">*</span></label>
-                            <p class="text-[11px] text-slate-400 mb-3">Scan/Foto lembar Akte Kelahiran</p>
+                            <p class="text-[11px] text-slate-400 mb-3">Scan/Foto Akte Kelahiran</p>
                             <input type="file" id="fileAkte" accept="image/*,.pdf" class="hidden" onchange="handleFileChange(this, 'previewAkte')">
                             <button type="button" onclick="document.getElementById('fileAkte').click()" class="text-xs bg-white hover:bg-brand-50 text-brand-700 font-semibold py-2 px-4 rounded-xl border border-brand-200 shadow-sm transition">Pilih File Akte</button>
                             <div id="previewAkte" class="mt-3 text-xs text-slate-500 font-medium">Belum ada berkas dipilih</div>
@@ -384,167 +79,150 @@
                             <div id="previewTransfer" class="mt-3 text-xs text-slate-500 font-medium">Belum ada berkas dipilih</div>
                         </div>
                     </div>
-
-                    <div class="flex justify-between pt-5 border-t border-slate-100">
-                        <button type="button" onclick="prevStep(2)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2 text-sm">
-                            <i class="fa-solid fa-arrow-left text-xs"></i> Kembali
-                        </button>
-                        <button type="button" onclick="nextStep(4)" class="bg-gradient-to-r from-brand-600 to-brand-800 hover:from-brand-700 hover:to-brand-900 text-white font-semibold px-7 py-3.5 rounded-xl shadow-md transition-all duration-200 flex items-center gap-2 text-sm">
-                            Lanjut: Tinjauan Data <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- BAGIAN 4: KONFIRMASI & KIRIM -->
-                <div id="step-4" class="p-6 md:p-10 space-y-7 hidden">
-                    <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center text-sm"><i class="fa-solid fa-clipboard-check"></i></span>
-                                Tinjauan & Konfirmasi Akhir
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-1">Periksa kembali data diri dan berkas terunggah sebelum menekan tombol kirim.</p>
-                        </div>
-                        <span class="text-xs bg-slate-100 text-slate-600 font-medium px-2.5 py-1 rounded-md">Langkah 4 dari 4</span>
-                    </div>
-
-                    <div class="bg-slate-50/80 p-6 rounded-2xl border border-slate-200/80 space-y-5 text-sm">
-                        <!-- Preview Siswa -->
-                        <div>
-                            <div class="flex items-center gap-2 font-bold text-brand-900 border-b border-slate-200 pb-2 mb-3">
-                                <i class="fa-solid fa-user-graduate text-brand-600"></i> Data Calon Siswa
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs md:text-sm">
-                                <div><span class="text-slate-400 block text-[11px]">Nama Lengkap:</span> <p id="review-nama" class="font-bold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">NISN / NIK:</span> <p id="review-nisn" class="font-bold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">Tempat, Tgl Lahir:</span> <p id="review-ttl" class="font-semibold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">Jenis Kelamin & Agama:</span> <p id="review-jk" class="font-semibold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">Sekolah Asal:</span> <p id="review-sekolah" class="font-semibold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">Alamat:</span> <p id="review-alamat" class="font-semibold text-slate-800">-</p></div>
-                            </div>
-                        </div>
-
-                        <!-- Preview Orang Tua -->
-                        <div>
-                            <div class="flex items-center gap-2 font-bold text-brand-900 border-b border-slate-200 pb-2 mb-3">
-                                <i class="fa-solid fa-users text-brand-600"></i> Data Orang Tua / Wali
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs md:text-sm">
-                                <div><span class="text-slate-400 block text-[11px]">Nama Ayah:</span> <p id="review-ayah" class="font-semibold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">Nama Ibu:</span> <p id="review-ibu" class="font-semibold text-slate-800">-</p></div>
-                                <div><span class="text-slate-400 block text-[11px]">No. WhatsApp Ortu:</span> <p id="review-hportu" class="font-semibold text-slate-800">-</p></div>
-                            </div>
-                        </div>
-
-                        <!-- Preview Berkas -->
-                        <div>
-                            <div class="flex items-center gap-2 font-bold text-brand-900 border-b border-slate-200 pb-2 mb-3">
-                                <i class="fa-solid fa-folder-open text-brand-600"></i> Berkas Terunggah
-                            </div>
-                            <div id="review-files" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                                <!-- Status Berkas -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Box Pernyataan -->
-                    <div class="flex items-start gap-3 bg-amber-50/80 p-4.5 rounded-2xl border border-amber-200/80">
-                        <input type="checkbox" id="persetujuan" class="mt-0.5 h-4 w-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500 cursor-pointer" required>
-                        <label for="persetujuan" class="text-xs text-amber-900 font-medium leading-relaxed cursor-pointer">
-                            Saya menyatakan bahwa seluruh data diri dan dokumen berkas yang terlampir adalah benar, sah, dan sesuai dengan dokumen asli calon murid SMP Farter Mamasa.
-                        </label>
-                    </div>
-
-                    <div class="flex justify-between pt-5 border-t border-slate-100">
-                        <button type="button" onclick="prevStep(3)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2 text-sm">
-                            <i class="fa-solid fa-arrow-left text-xs"></i> Kembali
-                        </button>
-                        <button type="button" id="btn-submit" onclick="submitForm()" class="bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2.5 text-sm">
-                            <i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Online
-                        </button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </main>
-
+<!-- ... existing code ... -->
     <!-- Modal Bukti Pendaftaran (Resi Pendaftaran Elegan Siap Cetak) -->
     <div id="success-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-100 relative max-h-[92vh] overflow-y-auto">
-            
-            <div id="printable-area" class="p-2">
-                <!-- Kop Kartu -->
-                <div class="text-center border-b-2 border-slate-800 pb-4 mb-5">
-                    <img src="https://lh3.googleusercontent.com/d/1rcDj_V01G97mbDMDI3PjgN0OhyT3X4VF" 
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=SMP+FM'" 
-                         alt="Logo SMP Farter Mamasa" class="h-16 mx-auto mb-2.5">
-                    <h2 class="text-lg font-extrabold text-slate-900 tracking-wide uppercase">PANITIA SPMB SMP FARTER MAMASA</h2>
-                    <p class="text-xs font-semibold text-slate-500 tracking-wider">TANDA BUKTI PENDAFTARAN ONLINE</p>
-                    <div class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full mt-2 border border-emerald-200">
-                        <i class="fa-solid fa-circle-check"></i> TERDAFTAR DI SISTEM
-                    </div>
+        <!-- ... existing modal content ... -->
+    </div>
+
+    <!-- Modal Panduan Google Apps Script Backend Code -->
+    <div id="guide-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-amber-500"></i> Setup Backend Google Drive & Sheets
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">Gunakan kode ini di Apps Script agar berkas dan data pendaftar otomatis masuk ke Google Drive & Spreadsheet.</p>
+                </div>
+                <button onclick="closeScriptGuideModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-700 leading-relaxed">
+                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl">
+                    <p class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Langkah Penting Deployment Apps Script:</p>
+                    <ol class="list-decimal pl-4 space-y-1 text-amber-800">
+                        <li>Buka Google Spreadsheet Pendaftaran Anda.</li>
+                        <li>Klik menu <b>Ekstensi</b> &gt; <b>Apps Script</b>.</li>
+                        <li>Hapus semua kode bawaan, lalu **paste kode di bawah**.</li>
+                        <li>Ganti <b>ID_FOLDER_DRIVE</b> (baris 10) dengan ID folder Google Drive tempat menyimpan berkas pendaftar.</li>
+                        <li>Klik <b>Terapkan (Deploy)</b> &gt; <b>Aplikasi Web Baru (New deployment)</b>.</li>
+                        <li>Ubah <i>Jalankan Sebagai (Execute as)</i>: <b>Saya (Me)</b>.</li>
+                        <li>Ubah <i>Siapa yang memiliki akses (Who has access)</i>: <b>Siapa saja (Anyone)</b>.</li>
+                        <li>Klik **Deploy**, izinkan akses akun Google, lalu salin URL Aplikasi Web ke variabel `SCRIPT_URL` di HTML ini.</li>
+                    </ol>
                 </div>
 
-                <!-- Detail Pendaftaran -->
-                <div class="space-y-3 text-xs md:text-sm">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">Nomor Registrasi:</span>
-                        <span id="res-id" class="font-extrabold text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded border border-brand-200">REG-2026-0000</span>
+                <div class="relative">
+                    <div class="flex justify-between items-center bg-slate-800 text-slate-200 px-4 py-2 rounded-t-xl text-[11px] font-mono">
+                        <span>Code.gs (Google Apps Script)</span>
+                        <button onclick="copyAppsScriptCode()" class="bg-brand-600 hover:bg-brand-500 text-white px-2.5 py-1 rounded text-[10px] font-sans font-semibold">
+                            <i class="fa-regular fa-copy"></i> Salin Kode Script
+                        </button>
                     </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">Tanggal Pendaftaran:</span>
-                        <span id="res-tgl" class="font-semibold text-slate-800">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">Nama Siswa:</span>
-                        <span id="res-nama" class="font-bold text-slate-900">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">NISN:</span>
-                        <span id="res-nisn" class="font-semibold text-slate-800">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">Sekolah Asal:</span>
-                        <span id="res-sekolah" class="font-semibold text-slate-800">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="text-slate-500 font-medium">No. Kontak Ortu:</span>
-                        <span id="res-hp" class="font-semibold text-slate-800">-</span>
-                    </div>
-                </div>
+                    <textarea id="apps-script-code" readonly class="w-full h-56 bg-slate-900 text-emerald-400 p-4 font-mono text-[11px] rounded-b-xl border border-slate-800 focus:outline-none select-all" style="tab-size: 2;">
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
 
-                <!-- Informasi Lanjutan -->
-                <div class="mt-5 p-4 bg-slate-50 rounded-2xl text-xs text-slate-600 border border-slate-200/80 space-y-1.5">
-                    <p class="font-bold text-slate-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-info text-brand-600"></i> Petunjuk Verifikasi Berkas:
-                    </p>
-                    <p class="leading-relaxed">Simpan atau cetak bukti pendaftaran ini. Bawa bukti ini bersama berkas fisik asli (KK, Akte Kelahiran, Pas Foto) saat jadwal verifikasi langsung di lokasi sekolah SMP Farter Mamasa.</p>
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getActiveSheet();
+
+    // Buat Header jika sheet masih kosong
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "Waktu Daftar", "No Registrasi", "Nama Lengkap", "NISN", "NIK", 
+        "Tempat Lahir", "Tanggal Lahir", "Jenis Kelamin", "Agama", 
+        "Sekolah Asal", "No HP Siswa", "Alamat", "Nama Ayah", "Pekerjaan Ayah", 
+        "Nama Ibu", "Pekerjaan Ibu", "No HP Ortu", "Nama Wali", 
+        "Pas Foto Drive", "KK Drive", "Akte Drive", "Transfer Drive"
+      ]);
+    }
+
+    // ID Folder Utama Tempat Menyimpan Berkas (Opsional, hapus/ganti jika ingin ke folder khusus)
+    var FOLDER_ID = "1PASTE_ID_FOLDER_DRIVE_DISINI"; 
+    var parentFolder;
+    try {
+      parentFolder = DriveApp.getFolderById(FOLDER_ID);
+    } catch(err) {
+      parentFolder = DriveApp.getRootFolder();
+    }
+
+    // Buat subfolder khusus untuk siswa ini
+    var folderSiswa = parentFolder.createFolder(data.namaLengkap + " - " + data.nisn);
+
+    // Fungsi menyimpan berkas Base64 ke Drive
+    function saveBase64File(fileObj, prefix) {
+      if (!fileObj || !fileObj.data) return "Tidak ada berkas";
+      var bytes = Utilities.base64Decode(fileObj.data);
+      var blob = Utilities.newBlob(bytes, fileObj.type || "image/jpeg", prefix + "_" + data.namaLengkap + "_" + (fileObj.name || "dokumen"));
+      var file = folderSiswa.createFile(blob);
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      return file.getUrl();
+    }
+
+    var fotoUrl = saveBase64File(data.files.foto, "FOTO");
+    var kkUrl = saveBase64File(data.files.kk, "KK");
+    var akteUrl = saveBase64File(data.files.akte, "AKTE");
+    var transferUrl = saveBase64File(data.files.transfer, "TRANSFER");
+
+    var regId = "REG-" + Math.floor(100000 + Math.random() * 900000);
+    var timestamp = new Date();
+
+    sheet.appendRow([
+      timestamp,
+      regId,
+      data.namaLengkap,
+      "'" + data.nisn,
+      "'" + data.nik,
+      data.tempatLahir,
+      data.tanggalLahir,
+      data.jenisKelamin,
+      data.agama,
+      data.sekolahAsal,
+      "'" + data.noHpSiswa,
+      data.alamatSiswa,
+      data.namaAyah,
+      data.pekerjaanAyah,
+      data.namaIbu,
+      data.pekerjaanIbu,
+      "'" + data.noHpOrtu,
+      data.namaWali || "-",
+      fotoUrl,
+      kkUrl,
+      akteUrl,
+      transferUrl
+    ]);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      regId: regId,
+      message: "Pendaftaran berhasil disimpan ke Drive & Sheets!"
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      message: err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}</textarea>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-3 no-print">
-                <button onclick="window.print()" class="flex-1 bg-gradient-to-r from-brand-700 to-brand-900 hover:from-brand-800 hover:to-brand-950 text-white font-bold py-3 px-4 rounded-xl text-xs md:text-sm shadow-md transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-print"></i> Cetak Tanda Bukti
-                </button>
-                <button onclick="closeSuccessModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-5 rounded-xl text-xs md:text-sm transition">
-                    Tutup
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeScriptGuideModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition">
+                    Tutup Panduan
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- Footer Sekolah -->
-    <footer class="bg-white border-t border-slate-200 mt-14 py-7 text-center text-xs text-slate-500">
-        <div class="max-w-6xl mx-auto px-4 space-y-2">
-            <div class="flex justify-center items-center gap-2 font-bold text-slate-700">
-                <span>SMP FARTER MAMASA</span> &bull; <span>AKREDITASI SEKOLAH</span>
-            </div>
-            <p>&copy; 2026 SMP Farter Mamasa. Seluruh Hak Cipta Dilindungi.</p>
-            <p class="text-slate-400">Jl. Poros Mamasa, Kabupaten Mamasa, Sulawesi Barat</p>
-        </div>
-    </footer>
 
     <!-- JavaScript Logika Aplikasi SPMB -->
     <script>
@@ -559,6 +237,21 @@
             transfer: null
         };
 
+        function openScriptGuideModal() {
+            document.getElementById('guide-modal').classList.remove('hidden');
+        }
+
+        function closeScriptGuideModal() {
+            document.getElementById('guide-modal').classList.add('hidden');
+        }
+
+        function copyAppsScriptCode() {
+            const codeArea = document.getElementById('apps-script-code');
+            codeArea.select();
+            document.execCommand('copy');
+            showToast("Kode Apps Script berhasil disalin ke clipboard!", "success");
+        }
+
         // Beralih Ke Step Tertentu
         function goToStepIfAllowed(targetStep) {
             if (targetStep < currentStep) {
@@ -570,99 +263,62 @@
             }
         }
 
-        // Fungsi Navigasi Form Step
-        function nextStep(targetStep) {
-            if (!validateStep(currentStep)) return;
-
-            document.getElementById(`step-${currentStep}`).classList.add('hidden');
-            document.getElementById(`step-${targetStep}`).classList.remove('hidden');
-            
-            updateStepIndicators(currentStep, targetStep);
-            currentStep = targetStep;
-
-            if (currentStep === 4) {
-                renderReviewData();
-            }
-
-            window.scrollTo({ top: 180, behavior: 'smooth' });
-        }
-
-        function prevStep(targetStep) {
-            document.getElementById(`step-${currentStep}`).classList.add('hidden');
-            document.getElementById(`step-${targetStep}`).classList.remove('hidden');
-            
-            updateStepIndicators(currentStep, targetStep);
-            currentStep = targetStep;
-            window.scrollTo({ top: 180, behavior: 'smooth' });
-        }
-
-        function updateStepIndicators(oldStep, newStep) {
-            const line = document.getElementById('progress-line');
-            line.style.width = `${((newStep - 1) / 3) * 100}%`;
-
-            for (let i = 1; i <= 4; i++) {
-                const el = document.getElementById(`step-indicator-${i}`);
-                if (i < newStep) {
-                    el.className = "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-completed transition duration-300";
-                    el.innerHTML = `<i class="fa-solid fa-check text-sm"></i>`;
-                } else if (i === newStep) {
-                    el.className = "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-active transition duration-300";
-                    el.innerHTML = `<i class="fa-solid ${getStepIcon(i)} text-sm"></i>`;
-                } else {
-                    el.className = "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center step-inactive transition duration-300";
-                    el.innerHTML = `<i class="fa-solid ${getStepIcon(i)} text-sm"></i>`;
+        // Kompresi Gambar Otomatis untuk Mengurangi Ukuran Payload
+        function compressImage(file, maxWidth = 1200, quality = 0.7) {
+            return new Promise((resolve) => {
+                if (!file.type.startsWith('image/')) {
+                    // Jika berkas PDF/non-gambar, kirim tanpa kompresi canvas
+                    const reader = new FileReader();
+                    reader.onload = e => resolve({
+                        name: file.name,
+                        type: file.type,
+                        data: e.target.result.split(',')[1]
+                    });
+                    reader.readAsDataURL(file);
+                    return;
                 }
-            }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                        const base64Data = compressedDataUrl.split(',')[1];
+
+                        resolve({
+                            name: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+                            type: "image/jpeg",
+                            data: base64Data
+                        });
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
-        function getStepIcon(step) {
-            switch(step) {
-                case 1: return 'fa-user';
-                case 2: return 'fa-users';
-                case 3: return 'fa-cloud-arrow-up';
-                case 4: return 'fa-square-check';
-                default: return 'fa-circle';
-            }
-        }
-
-        // Validasi per Langkah Form
-        function validateStep(step) {
-            if (step === 1) {
-                const required = ['namaLengkap', 'nisn', 'nik', 'tempatLahir', 'tanggalLahir', 'jenisKelamin', 'agama', 'sekolahAsal', 'alamatSiswa'];
-                for (let field of required) {
-                    const input = document.getElementById(field);
-                    if (!input || !input.value.trim()) {
-                        showToast(`Harap isi bidang wajib "${input.previousElementSibling.innerText.replace('*', '').trim()}"`, 'error');
-                        input.focus();
-                        return false;
-                    }
-                }
-            } else if (step === 2) {
-                const required = ['namaAyah', 'pekerjaanAyah', 'namaIbu', 'pekerjaanIbu', 'noHpOrtu'];
-                for (let field of required) {
-                    const input = document.getElementById(field);
-                    if (!input || !input.value.trim()) {
-                        showToast(`Harap isi data orang tua: "${input.previousElementSibling.innerText.replace('*', '').trim()}"`, 'error');
-                        input.focus();
-                        return false;
-                    }
-                }
-            } else if (step === 3) {
-                if (!fileDataStore.foto || !fileDataStore.kk || !fileDataStore.akte || !fileDataStore.transfer) {
-                    showToast("Harap upload ke-4 dokumen yang diminta (Pas Foto, KK, Akte, & Bukti Transfer).", 'error');
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // Pembacaan Berkas Dokumen & Konversi Base64
-        function handleFileChange(input, previewId) {
+        // Pembacaan Berkas Dokumen & Kompresi
+        async function handleFileChange(input, previewId) {
             const file = input.files[0];
             if (!file) return;
 
-            if (file.size > 5 * 1024 * 1024) { // Batas 5MB
-                showToast("Ukuran berkas terlalu besar! Maksimal ukuran file 5MB.", 'error');
+            if (file.size > 10 * 1024 * 1024) { 
+                showToast("Ukuran berkas terlalu besar! Maksimal ukuran file 10MB.", 'error');
                 input.value = "";
                 return;
             }
@@ -674,44 +330,26 @@
                 'previewTransfer': 'transfer'
             };
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result.split(',')[1];
-                fileDataStore[keyMap[previewId]] = {
-                    name: file.name,
-                    type: file.type,
-                    data: base64Data
-                };
+            document.getElementById(previewId).innerHTML = `
+                <div class="inline-flex items-center gap-1.5 text-brand-600 text-[11px] font-semibold animate-pulse">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Mengompres berkas...
+                </div>
+            `;
+
+            try {
+                const compressedFile = await compressImage(file);
+                fileDataStore[keyMap[previewId]] = compressedFile;
 
                 document.getElementById(previewId).innerHTML = `
                     <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200 font-semibold text-[11px]">
-                        <i class="fa-solid fa-circle-check"></i> ${file.name}
+                        <i class="fa-solid fa-circle-check"></i> ${compressedFile.name} (Siap)
                     </div>
                 `;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Tampilkan Tinjauan Ringkasan Data
-        function renderReviewData() {
-            document.getElementById('review-nama').innerText = document.getElementById('namaLengkap').value;
-            document.getElementById('review-nisn').innerText = `${document.getElementById('nisn').value} / ${document.getElementById('nik').value}`;
-            document.getElementById('review-ttl').innerText = `${document.getElementById('tempatLahir').value}, ${document.getElementById('tanggalLahir').value}`;
-            document.getElementById('review-jk').innerText = `${document.getElementById('jenisKelamin').value} (${document.getElementById('agama').value})`;
-            document.getElementById('review-sekolah').innerText = document.getElementById('sekolahAsal').value;
-            document.getElementById('review-alamat').innerText = document.getElementById('alamatSiswa').value;
-
-            document.getElementById('review-ayah').innerText = `${document.getElementById('namaAyah').value} (${document.getElementById('pekerjaanAyah').value})`;
-            document.getElementById('review-ibu').innerText = `${document.getElementById('namaIbu').value} (${document.getElementById('pekerjaanIbu').value})`;
-            document.getElementById('review-hportu').innerText = document.getElementById('noHpOrtu').value;
-
-            const filesContainer = document.getElementById('review-files');
-            filesContainer.innerHTML = `
-                <div class="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between"><span class="text-slate-600">Pas Foto 3x4:</span> <span class="font-bold text-emerald-600"><i class="fa-solid fa-check"></i> ${fileDataStore.foto ? 'Terunggah' : '-'}</span></div>
-                <div class="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between"><span class="text-slate-600">Kartu Keluarga:</span> <span class="font-bold text-emerald-600"><i class="fa-solid fa-check"></i> ${fileDataStore.kk ? 'Terunggah' : '-'}</span></div>
-                <div class="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between"><span class="text-slate-600">Akte Kelahiran:</span> <span class="font-bold text-emerald-600"><i class="fa-solid fa-check"></i> ${fileDataStore.akte ? 'Terunggah' : '-'}</span></div>
-                <div class="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between"><span class="text-slate-600">Bukti Transfer:</span> <span class="font-bold text-emerald-600"><i class="fa-solid fa-check"></i> ${fileDataStore.transfer ? 'Terunggah' : '-'}</span></div>
-            `;
+            } catch (err) {
+                console.error("Error compressing file:", err);
+                showToast("Gagal memproses file. Silakan coba file lain.", "error");
+                document.getElementById(previewId).innerText = "Gagal memproses berkas";
+            }
         }
 
         // Pengiriman Data ke Google Apps Script
@@ -724,7 +362,7 @@
 
             const btnSubmit = document.getElementById('btn-submit');
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan ke Google Drive...`;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim ke Google Drive...`;
 
             const payload = {
                 namaLengkap: document.getElementById('namaLengkap').value,
@@ -747,6 +385,7 @@
             };
 
             try {
+                // Gunakan text/plain agar Google Apps Script menyetujui permintaan CORS tanpa PREFLIGHT OPTION issue
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'cors',
@@ -754,7 +393,13 @@
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
+                let result = {};
+                try {
+                    result = await response.json();
+                } catch(e) {
+                    // Jika Apps Script redirect atau kembalikan output non-JSON
+                    console.warn("Respons Apps Script bukan JSON:", e);
+                }
 
                 if (result.status === 'success' || response.ok) {
                     showToast("Pendaftaran Anda berhasil diproses dan disimpan!", "success");
@@ -769,21 +414,11 @@
 
                     document.getElementById('success-modal').classList.remove('hidden');
                 } else {
-                    throw new Error(result.message || "Gagal menyimpan data.");
+                    throw new Error(result.message || "Gagal menyimpan data ke Google Drive.");
                 }
             } catch (error) {
                 console.error("Submit Error:", error);
-                showToast("Pendaftaran berhasil dicatat! Buka tanda bukti di bawah.", "success");
-                
-                const regId = "REG-" + Math.floor(100000 + Math.random() * 900000);
-                document.getElementById('res-id').innerText = regId;
-                document.getElementById('res-tgl').innerText = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-                document.getElementById('res-nama').innerText = payload.namaLengkap;
-                document.getElementById('res-nisn').innerText = payload.nisn;
-                document.getElementById('res-sekolah').innerText = payload.sekolahAsal;
-                document.getElementById('res-hp').innerText = payload.noHpOrtu;
-
-                document.getElementById('success-modal').classList.remove('hidden');
+                showToast("Gagal terhubung ke Google Drive/Sheets. Pastikan URL Apps Script sudah di-deploy dengan hak akses 'Anyone' (Siapa Saja). Klik tombol 'Panduan Drive & Script' di pojok atas untuk cara setup.", "error");
             } finally {
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran Online`;
