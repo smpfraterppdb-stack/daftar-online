@@ -361,23 +361,39 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
     <!-- JavaScript Application Logic -->
+    <!-- JavaScript Application Logic -->
     <script>
         // Link Apps Script otomatis Anda
         const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyJsrjaqv8IDcljqCrfJbn7egHlozPbFemQw5Z0fTmmODh7JHrb2aW-KbOqF2kZ28mH/exec';
-        let submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+        
+        let submittedRecords = [];
+        try {
+            submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+        } catch (e) {
+            submittedRecords = [];
+        }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-amber-400', 'font-bold'));
 
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+            
             const targetNav = document.getElementById('nav-' + tabId);
-            if(targetNav) targetNav.classList.add('text-amber-400', 'font-bold');
+            if(targetNav) {
+                targetNav.classList.add('text-amber-400', 'font-bold');
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
         }
 
         function readFileAsBase64(file) {
@@ -390,26 +406,26 @@
             });
         }
 
-      // Ganti bagian di dalam handleFormSubmit yang berhubungan dengan localStorage dengan kode ini:
+        async function handleFormSubmit(event) {
+            event.preventDefault();
 
-                // Simpan hanya data teks ringkas saja ke LocalStorage (tanpa file base64 yang besar)
-                const lightData = { ...formData };
-                delete lightData.fileFoto;
-                delete lightData.fileKk;
-                delete lightData.fileAkta;
-                delete lightData.fileTransfer;
+            const btnSubmit = document.getElementById('btn-submit-form');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengirim & Menyimpan ke Drive...</span>`;
+            }
 
-                submittedRecords.push(lightData);
-                try {
-                    localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
-                } catch (storageErr) {
-                    console.warn('Storage penuh, namun pengiriman ke Drive tetap diproses.');
-                }
+            try {
                 // Ambil file upload dalam bentuk Base64
-                const fileFoto = await readFileAsBase64(document.getElementById('fileFoto').files[0]);
-                const fileKk = await readFileAsBase64(document.getElementById('fileKk').files[0]);
-                const fileAkta = await readFileAsBase64(document.getElementById('fileAkta').files[0]);
-                const fileTransfer = await readFileAsBase64(document.getElementById('fileTransfer').files[0]);
+                const fileFotoElement = document.getElementById('fileFoto');
+                const fileKkElement = document.getElementById('fileKk');
+                const fileAktaElement = document.getElementById('fileAkta');
+                const fileTransferElement = document.getElementById('fileTransfer');
+
+                const fileFoto = fileFotoElement && fileFotoElement.files[0] ? await readFileAsBase64(fileFotoElement.files[0]) : null;
+                const fileKk = fileKkElement && fileKkElement.files[0] ? await readFileAsBase64(fileKkElement.files[0]) : null;
+                const fileAkta = fileAktaElement && fileAktaElement.files[0] ? await readFileAsBase64(fileAktaElement.files[0]) : null;
+                const fileTransfer = fileTransferElement && fileTransferElement.files[0] ? await readFileAsBase64(fileTransferElement.files[0]) : null;
 
                 const noReg = 'REG-2027-' + Math.floor(1000 + Math.random() * 9000);
                 const namaLengkap = document.getElementById('nama').value.trim();
@@ -453,7 +469,7 @@
                     fileTransfer: fileTransfer
                 };
 
-                // Kirim otomatis ke Apps Script Web App
+                // Kirim ke Google Apps Script (menggunakan mode no-cors)
                 await fetch(GAS_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -461,18 +477,34 @@
                     body: JSON.stringify(formData)
                 });
 
-                submittedRecords.push(formData);
-                localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
+                // Simpan data teks saja ke LocalStorage agar aman dari batas kuota memori
+                const lightData = { ...formData };
+                delete lightData.fileFoto;
+                delete lightData.fileKk;
+                delete lightData.fileAkta;
+                delete lightData.fileTransfer;
+
+                submittedRecords.push(lightData);
+                try {
+                    localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
+                } catch (storageErr) {
+                    console.warn('Storage penuh, namun pengiriman ke Google Drive tetap diproses.');
+                }
 
                 showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!\nFile otomatis tersimpan di Google Drive.`, 'success');
                 tampilkanKartuBukti(formData);
                 switchTab('cek-status');
+                
+                // Reset form setelah sukses
+                document.getElementById('spmb-form').reset();
 
             } catch (err) {
                 showToast('Terjadi kesalahan: ' + err.message, 'error');
             } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Pendaftaran</span>`;
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Pendaftaran</span>`;
+                }
             }
         }
 
@@ -488,18 +520,24 @@
 
         function cariPendaftaran() {
             const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+            if(!keyword) {
+                showToast('Masukkan nama atau nomor registrasi terlebih dahulu.', 'error');
+                return;
+            }
             const found = submittedRecords.find(r => r.nama.toLowerCase().includes(keyword) || r.noReg.toLowerCase() === keyword);
             if (found) {
                 tampilkanKartuBukti(found);
+                showToast('Data ditemukan!', 'success');
             } else {
-                showToast('Data tidak ditemukan.', 'error');
+                showToast('Data pendaftaran tidak ditemukan.', 'error');
             }
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
-            toast.className = `bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 text-sm`;
+            toast.className = `bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 text-sm border-l-4 ${type === 'success' ? 'border-emerald-500' : 'border-amber-500'}`;
             toast.innerHTML = `<span>${message.replace(/\n/g, '<br>')}</span>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
