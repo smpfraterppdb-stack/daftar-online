@@ -598,7 +598,7 @@
 
             try {
                 // Melakukan permintaan data ke Google Apps Script menggunakan parameter satu kolom utuh tempat_lahir
-                const response = await fetch(`${GAS_API_URL}?nama=${encodeURIComponent(searchNama)}&tempat_lahir=${encodeURIComponent(searchTempatLahir)}`);
+                const response = await fetch(`${GAS_API_URL}?nama=${encodeURIComponent(searchNama)}&tempat_lahir=${encodeURIComponent(searchTglLahir)}`);
                 const result = await response.json();
 
                 if (result && result.found) {
@@ -615,7 +615,7 @@
 
                     const found = submittedRecords.find(r => {
                         const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
-                        const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTempatLahir);
+                        const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir);
                         return matchNama && matchTempat;
                     });
 
