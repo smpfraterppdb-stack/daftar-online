@@ -506,13 +506,16 @@
                 const uniqueId = Math.floor(100 + Math.random() * 900);
                 const noReg = 'REG-ONLINE-' + new Date().getFullYear() + '-' + uniqueId;
                 const namaLengkap = document.getElementById('nama').value.trim();
+                
+                // Tempat dan tanggal lahir digabung dalam satu string utuh
+                const tempatTanggalLahir = document.getElementById('tempat_lahir').value.trim();
 
                 const formData = {
                     action: 'register',
                     noReg: noReg,
                     nama: namaLengkap,
                     jk: document.getElementById('jk').value,
-                    tempat_lahir: document.getElementById('tempat_lahir').value.trim(),
+                    tempat_lahir: tempatTanggalLahir,
                     agama: document.getElementById('agama').value,
                     kewarganegaraan: document.getElementById('kewarganegaraan').value.trim(),
                     anak_ke: document.getElementById('anak_ke').value,
@@ -531,6 +534,16 @@
                     tanggal_daftar: new Date().toLocaleDateString('id-ID'),
                     fileTransfer: fileTransfer
                 };
+
+                // Simpan ke localStorage cadangan agar pencarian offline/lokal langsung sinkron
+                let submittedRecords = [];
+                try {
+                    submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                } catch (e) {
+                    submittedRecords = [];
+                }
+                submittedRecords.push(formData);
+                localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
 
                 // Kirim ke Google Apps Script
                 await fetch(GAS_API_URL, {
@@ -584,19 +597,38 @@
             }
 
             try {
-                // Melakukan permintaan data ke Google Apps Script (Pastikan Apps Script Anda mendukung GET untuk mengembalikan JSON data)
-                const response = await fetch(`${GAS_API_URL}?nama=${encodeURIComponent(searchNama)}&tempat_lahir=${encodeURIComponent(searchTglLahir)}`);
+                // Melakukan permintaan data ke Google Apps Script menggunakan parameter satu kolom utuh tempat_lahir
+                const response = await fetch(`${GAS_API_URL}?nama=${encodeURIComponent(searchNama)}&tempat_lahir=${encodeURIComponent(searchTempatLahir)}`);
                 const result = await response.json();
 
                 if (result && result.found) {
                     tampilkanKartuBukti(result.data);
                     showToast('Data pendaftaran ditemukan!', 'success');
                 } else {
-                    document.getElementById('hasil-pendaftaran').classList.add('hidden');
-                    showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat/Tanggal Lahir sudah sesuai.', 'error');
+                    // Cek fallback lokal di localStorage
+                    let submittedRecords = [];
+                    try {
+                        submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                    } catch (e) {
+                        submittedRecords = [];
+                    }
+
+                    const found = submittedRecords.find(r => {
+                        const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
+                        const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTempatLahir);
+                        return matchNama && matchTempat;
+                    });
+
+                    if (found) {
+                        tampilkanKartuBukti(found);
+                        showToast('Data pendaftaran ditemukan!', 'success');
+                    } else {
+                        document.getElementById('hasil-pendaftaran').classList.add('hidden');
+                        showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat/Tanggal Lahir sudah sesuai.', 'error');
+                    }
                 }
             } catch (err) {
-                // Fallback pencarian lokal jika Google Apps Script belum mengembalikan endpoint GET JSON
+                // Fallback pencarian lokal jika Google Apps Script gagal diakses
                 let submittedRecords = [];
                 try {
                     submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
