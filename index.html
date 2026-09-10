@@ -419,6 +419,13 @@
             if(targetNav) {
                 targetNav.classList.add('text-amber-400', 'font-bold');
             }
+
+            // Pastikan hasil pendaftaran tersembunyi sebelum pengguna melakukan pencarian
+            if (tabId === 'cek-status') {
+                const hasilCard = document.getElementById('hasil-pendaftaran');
+                if (hasilCard) hasilCard.classList.add('hidden');
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -507,11 +514,12 @@
                 }
 
                 showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!\nFile otomatis tersimpan di Google Drive.`, 'success');
-                tampilkanKartuBukti(formData);
-                switchTab('cek-status');
                 
                 // Reset form setelah sukses
                 document.getElementById('spmb-form').reset();
+
+                // Kembali ke beranda tanpa membuka menu/kartu status pendaftaran
+                switchTab('beranda');
 
             } catch (err) {
                 showToast('Terjadi kesalahan: ' + err.message, 'error');
@@ -533,20 +541,30 @@
         }
 
         function cariPendaftaran() {
-            const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
-            if(!keyword) {
+            const searchInput = document.getElementById('searchKeyword');
+            const keyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+            if (!keyword) {
                 showToast('Masukkan nama atau nomor registrasi terlebih dahulu.', 'error');
                 return;
             }
+
             const found = submittedRecords.find(r => 
                 (r.nama && r.nama.toLowerCase().includes(keyword)) || 
                 (r.noReg && r.noReg.toLowerCase() === keyword)
             );
+
             if (found) {
                 tampilkanKartuBukti(found);
                 showToast('Data pendaftaran ditemukan!', 'success');
             } else {
+                document.getElementById('hasil-pendaftaran').classList.add('hidden');
                 showToast('Data pendaftaran tidak ditemukan.', 'error');
+            }
+
+            // Bersihkan kotak isian setelah tombol cari diklik
+            if (searchInput) {
+                searchInput.value = '';
             }
         }
 
