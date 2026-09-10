@@ -120,6 +120,11 @@
                             </div>
 
                             <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Lahir <span class="text-red-500">*</span></label>
+                                <input type="date" id="tanggal_lahir" required class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm">
+                            </div>
+
+                            <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1">Agama <span class="text-red-500">*</span></label>
                                 <select id="agama" required class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm bg-white">
                                     <option value="">-- Pilih Agama --</option>
@@ -238,15 +243,22 @@
         <section id="tab-cek-status" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8 no-print">
                 <h2 class="text-2xl font-bold text-blue-950 mb-2">Cek Status Pendaftaran</h2>
-                <p class="text-sm text-slate-500 mb-6">Masukkan Nama Lengkap atau No. Registrasi untuk mengecek status pendaftaran siswa.</p>
+                <p class="text-sm text-slate-500 mb-6">Masukkan Nama Lengkap dan Tempat/Tanggal Lahir untuk mengecek status pendaftaran siswa.</p>
 
-                <div class="flex flex-col sm:flex-row gap-3 max-w-xl">
-                    <input type="text" id="searchKeyword" class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800" placeholder="Masukkan Nama Lengkap / No. Registrasi">
-                    <button onclick="cariPendaftaran()" class="bg-blue-900 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-800 transition flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Cari</span>
-                    </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                        <input type="text" id="searchNama" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800" placeholder="Masukkan Nama Lengkap">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tempat / Tanggal Lahir <span class="text-red-500">*</span></label>
+                        <input type="text" id="searchTglLahir" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800" placeholder="Contoh: Mamasa / 12-05-2012">
+                    </div>
                 </div>
+                <button onclick="cariPendaftaran()" class="bg-blue-900 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-800 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Cari Status Pendaftaran</span>
+                </button>
             </div>
 
             <!-- HASIL CEK STATUS PENDAFTARAN -->
@@ -475,6 +487,7 @@
                     nama: namaLengkap,
                     jk: document.getElementById('jk').value,
                     tempat_lahir: document.getElementById('tempat_lahir').value.trim(),
+                    tanggal_lahir: document.getElementById('tanggal_lahir') ? document.getElementById('tanggal_lahir').value : '',
                     agama: document.getElementById('agama').value,
                     kewarganegaraan: document.getElementById('kewarganegaraan').value.trim(),
                     anak_ke: document.getElementById('anak_ke').value,
@@ -541,30 +554,32 @@
         }
 
         function cariPendaftaran() {
-            const searchInput = document.getElementById('searchKeyword');
-            const keyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+            const searchNamaEl = document.getElementById('searchNama');
+            const searchTglLahirEl = document.getElementById('searchTglLahir');
 
-            if (!keyword) {
-                showToast('Masukkan nama atau nomor registrasi terlebih dahulu.', 'error');
+            const searchNama = searchNamaEl ? searchNamaEl.value.trim().toLowerCase() : '';
+            const searchTglLahir = searchTglLahirEl ? searchTglLahirEl.value.trim().toLowerCase() : '';
+
+            if (!searchNama || !searchTglLahir) {
+                showToast('Harap masukkan Nama Lengkap dan Tempat/Tanggal Lahir.', 'error');
                 return;
             }
 
-            const found = submittedRecords.find(r => 
-                (r.nama && r.nama.toLowerCase().includes(keyword)) || 
-                (r.noReg && r.noReg.toLowerCase() === keyword)
-            );
+            const found = submittedRecords.find(r => {
+                const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
+                const combinedTempatTgl = ((r.tempat_lahir || '') + ' ' + (r.tanggal_lahir || '')).toLowerCase();
+                const matchTgl = combinedTempatTgl.includes(searchTglLahir) || 
+                                 (r.tanggal_lahir && r.tanggal_lahir.toLowerCase().includes(searchTglLahir)) ||
+                                 (r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir));
+                return matchNama && matchTgl;
+            });
 
             if (found) {
                 tampilkanKartuBukti(found);
                 showToast('Data pendaftaran ditemukan!', 'success');
             } else {
                 document.getElementById('hasil-pendaftaran').classList.add('hidden');
-                showToast('Data pendaftaran tidak ditemukan.', 'error');
-            }
-
-            // Bersihkan kotak isian setelah tombol cari diklik
-            if (searchInput) {
-                searchInput.value = '';
+                showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat/Tanggal Lahir sudah sesuai.', 'error');
             }
         }
 
