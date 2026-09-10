@@ -40,7 +40,7 @@
             <nav class="hidden md:flex space-x-6 text-sm font-medium">
                 <button onclick="switchTab('beranda')" class="nav-btn text-amber-400 font-bold hover:text-amber-300 transition" id="nav-beranda">Beranda</button>
                 <button onclick="switchTab('pendaftaran')" class="nav-btn hover:text-amber-400 transition" id="nav-pendaftaran">Form Pendaftaran</button>
-                <button onclick="switchTab('jadwal')" class="nav-btn hover:text-amber-400 transition" id="nav-jadwal">Informasi</button>
+                <button onclick="switchTab('jadwal')" class="nav-btn hover:text-amber-400 transition" id="nav-jadwal">Jadwal Seleksi</button>
                 <button onclick="switchTab('cek-status')" class="nav-btn hover:text-amber-400 transition" id="nav-cek-status">Cek Status Pendaftaran</button>
             </nav>
 
@@ -53,7 +53,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-blue-950 px-4 pt-2 pb-4 space-y-2 text-sm border-t border-blue-800">
             <button onclick="switchTab('beranda'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Beranda</button>
             <button onclick="switchTab('pendaftaran'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Form Pendaftaran</button>
-            <button onclick="switchTab('jadwal'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Informasi</button>
+            <button onclick="switchTab('jadwal'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Jadwal Seleksi</button>
             <button onclick="switchTab('cek-status'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Cek Status Pendaftaran</button>
         </div>
     </header>
@@ -73,12 +73,17 @@
                         Silakan isi formulir pendaftaran online, setelah melakukan transfer biaya pendafataran sebesar Rp. 100.000,- ke rekening Bank Sulselbar no. 074 201 0000 0000 a.n. Panitia SPMB
                     </p>
                     <div class="flex flex-wrap gap-3">
-                        <button onclick="switchTab('pendaftaran')" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold px-6 py-3 rounded-lg shadow-lg transition flex items-center space-x-2">
+                        <button onclick="switchTab('pendaftaran')" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold px-5 py-3 rounded-lg shadow-lg transition flex items-center space-x-2">
+                            <i class="fa-solid fa-file-pen"></i>
                             <span>Mulai Pendaftaran</span>
-                            <i class="fa-solid fa-arrow-right"></i>
                         </button>
-                        <button onclick="switchTab('jadwal')" class="bg-white/10 hover:bg-white/25 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
-                            Jadwal Seleksi
+                        <button onclick="switchTab('cek-status')" class="bg-white/10 hover:bg-white/25 text-white font-semibold px-5 py-3 rounded-lg border border-white/30 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Cek Status Pendaftaran</span>
+                        </button>
+                        <button onclick="switchTab('jadwal')" class="bg-white/10 hover:bg-white/25 text-white font-semibold px-5 py-3 rounded-lg border border-white/30 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span>Jadwal Seleksi</span>
                         </button>
                     </div>
                 </div>
@@ -368,7 +373,7 @@
                         <input type="text" id="searchTglLahir" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800" placeholder="Contoh : Mamasa, 01 Januari 2010">
                     </div>
                 </div>
-                <button onclick="cariPendaftaran()" class="bg-blue-900 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-800 transition flex items-center justify-center space-x-2">
+                <button onclick="cariPendaftaran()" id="btn-search-status" class="bg-blue-900 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-blue-800 transition flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <span>Cari Status Pendaftaran</span>
                 </button>
@@ -443,13 +448,6 @@
     <script>
         // Link Apps Script otomatis
         const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxZ6xyEzdYzTfqgJrOq_hIO9raoJ-6bT7v1yCEgArFTzjxE87Oe_aOLMcvIx-V1WEutoQ/exec';
-        
-        let submittedRecords = [];
-        try {
-            submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
-        } catch (e) {
-            submittedRecords = [];
-        }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -501,25 +499,23 @@
             }
 
             try {
-                // Ambil file upload dalam bentuk Base64
                 const fileTransferElement = document.getElementById('fileTransfer');
                 const fileTransfer = fileTransferElement && fileTransferElement.files[0] ? await readFileAsBase64(fileTransferElement.files[0]) : null;
 
-                let currentCounter = parseInt(localStorage.getItem('spmb_seq_counter') || '0', 10);
-                if (currentCounter < submittedRecords.length) {
-                    currentCounter = submittedRecords.length;
-                }
-                currentCounter += 1;
-                localStorage.setItem('spmb_seq_counter', currentCounter.toString());
-
-                const noReg = 'REG-ONLINE-' + String(currentCounter).padStart(3, '0');
+                // Membuat nomor registrasi unik berbasis timestamp agar lintas perangkat aman
+                const uniqueId = Math.floor(100 + Math.random() * 900);
+                const noReg = 'REG-ONLINE-' + new Date().getFullYear() + '-' + uniqueId;
                 const namaLengkap = document.getElementById('nama').value.trim();
+                
+                // Tempat dan tanggal lahir digabung dalam satu string utuh
+                const tempatTanggalLahir = document.getElementById('tempat_lahir').value.trim();
 
                 const formData = {
+                    action: 'register',
                     noReg: noReg,
                     nama: namaLengkap,
                     jk: document.getElementById('jk').value,
-                    tempat_lahir: document.getElementById('tempat_lahir').value.trim(),
+                    tempat_lahir: tempatTanggalLahir,
                     agama: document.getElementById('agama').value,
                     kewarganegaraan: document.getElementById('kewarganegaraan').value.trim(),
                     anak_ke: document.getElementById('anak_ke').value,
@@ -539,7 +535,17 @@
                     fileTransfer: fileTransfer
                 };
 
-                // Kirim ke Google Apps Script (menggunakan mode no-cors)
+                // Simpan ke localStorage cadangan agar pencarian offline/lokal langsung sinkron
+                let submittedRecords = [];
+                try {
+                    submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                } catch (e) {
+                    submittedRecords = [];
+                }
+                submittedRecords.push(formData);
+                localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
+
+                // Kirim ke Google Apps Script
                 await fetch(GAS_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -547,23 +553,10 @@
                     body: JSON.stringify(formData)
                 });
 
-                // Simpan data teks saja ke LocalStorage agar aman dari batas kuota memori
-                const lightData = { ...formData };
-                delete lightData.fileTransfer;
-
-                submittedRecords.push(lightData);
-                try {
-                    localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
-                } catch (storageErr) {
-                    console.warn('Storage penuh, namun pengiriman ke Google Drive tetap diproses.');
-                }
-
                 showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!\nFile otomatis tersimpan di Google Drive.`, 'success');
                 
                 // Reset form setelah sukses
                 document.getElementById('spmb-form').reset();
-
-                // Kembali ke beranda tanpa membuka menu/kartu status pendaftaran
                 switchTab('beranda');
 
             } catch (err) {
@@ -577,38 +570,90 @@
         }
 
         function tampilkanKartuBukti(data) {
-            document.getElementById('card-reg').innerText = data.noReg || '-';
-            document.getElementById('card-nama').innerText = data.nama || '-';
-            document.getElementById('card-sekolah').innerText = data.sekolah_asal || '-';
-            document.getElementById('card-jk').innerText = data.jk || '-';
+            document.getElementById('card-reg').innerText = data.noReg || data['No. Registrasi'] || '-';
+            document.getElementById('card-nama').innerText = data.nama || data['Nama Lengkap'] || '-';
+            document.getElementById('card-sekolah').innerText = data.sekolah_asal || data['Asal Sekolah'] || '-';
+            document.getElementById('card-jk').innerText = data.jk || data['Jenis Kelamin'] || '-';
             
             document.getElementById('hasil-pendaftaran').classList.remove('hidden');
         }
 
-        function cariPendaftaran() {
+        async function cariPendaftaran() {
             const searchNamaEl = document.getElementById('searchNama');
             const searchTglLahirEl = document.getElementById('searchTglLahir');
+            const btnSearch = document.getElementById('btn-search-status');
 
             const searchNama = searchNamaEl ? searchNamaEl.value.trim().toLowerCase() : '';
             const searchTglLahir = searchTglLahirEl ? searchTglLahirEl.value.trim().toLowerCase() : '';
 
             if (!searchNama || !searchTglLahir) {
-                showToast('Harap masukkan Nama Lengkap dan Tempat Lahir.', 'error');
+                showToast('Harap masukkan Nama Lengkap dan Tempat/Tanggal Lahir.', 'error');
                 return;
             }
 
-            const found = submittedRecords.find(r => {
-                const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
-                const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir);
-                return matchNama && matchTempat;
-            });
+            if (btnSearch) {
+                btnSearch.disabled = true;
+                btnSearch.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mencari di Server...</span>`;
+            }
 
-            if (found) {
-                tampilkanKartuBukti(found);
-                showToast('Data pendaftaran ditemukan!', 'success');
-            } else {
-                document.getElementById('hasil-pendaftaran').classList.add('hidden');
-                showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat Lahir sudah sesuai.', 'error');
+            try {
+                // Melakukan permintaan data ke Google Apps Script menggunakan parameter satu kolom utuh tempat_lahir
+                const response = await fetch(`${GAS_API_URL}?nama=${encodeURIComponent(searchNama)}&tempat_lahir=${encodeURIComponent(searchTglLahir)}`);
+                const result = await response.json();
+
+                if (result && result.found) {
+                    tampilkanKartuBukti(result.data);
+                    showToast('Data pendaftaran ditemukan!', 'success');
+                } else {
+                    // Cek fallback lokal di localStorage
+                    let submittedRecords = [];
+                    try {
+                        submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                    } catch (e) {
+                        submittedRecords = [];
+                    }
+
+                    const found = submittedRecords.find(r => {
+                        const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
+                        const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir);
+                        return matchNama && matchTempat;
+                    });
+
+                    if (found) {
+                        tampilkanKartuBukti(found);
+                        showToast('Data pendaftaran ditemukan!', 'success');
+                    } else {
+                        document.getElementById('hasil-pendaftaran').classList.add('hidden');
+                        showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat/Tanggal Lahir sudah sesuai.', 'error');
+                    }
+                }
+            } catch (err) {
+                // Fallback pencarian lokal jika Google Apps Script gagal diakses
+                let submittedRecords = [];
+                try {
+                    submittedRecords = JSON.parse(localStorage.getItem('spmb_records') || '[]');
+                } catch (e) {
+                    submittedRecords = [];
+                }
+
+                const found = submittedRecords.find(r => {
+                    const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
+                    const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir);
+                    return matchNama && matchTempat;
+                });
+
+                if (found) {
+                    tampilkanKartuBukti(found);
+                    showToast('Data pendaftaran ditemukan (Mode Lokal)!', 'success');
+                } else {
+                    document.getElementById('hasil-pendaftaran').classList.add('hidden');
+                    showToast('Data tidak ditemukan. Pastikan koneksi atau data sudah benar.', 'error');
+                }
+            } finally {
+                if (btnSearch) {
+                    btnSearch.disabled = false;
+                    btnSearch.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> <span>Cari Status Pendaftaran</span>`;
+                }
             }
         }
 
