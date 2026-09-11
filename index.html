@@ -353,113 +353,14 @@
         <section id="tab-informasi" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8 max-w-4xl mx-auto space-y-6">
                 <div class="text-center border-b pb-4">
-                    <h2 class="text-2xl font-bold text-blue-950">INFORMASI & KETENTUAN PENDAFTARAN</h2>
+                    <h2 class="text-2xl font-bold text-blue-950">INFORMASI PENGAMBILAN KARTU TANDA PESERTA SELEKSI</h2>
                     <p class="text-xs sm:text-sm text-slate-500 mt-1">SMP FRATER MAMASA - TAHUN PELAJARAN 2027/2028</p>
                 </div>
-
-                <!-- Panduan Perbaikan Google Drive / Apps Script -->
-                <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 space-y-3">
-                    <h5 class="font-bold text-blue-950 text-sm sm:text-base flex items-center gap-2">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
-                        Panduan Otomatisasi Google Docs & Google Drive (Apps Script)
-                    </h5>
-                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        Agar sistem dapat mengisi formulir pendaftaran otomatis (Google Docs Template) dan menyimpannya di folder Google Drive dengan nama pendaftar, ikuti langkah berikut:
-                    </p>
-                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-800 space-y-2 font-medium pl-1">
-                        <li>Buat file <strong>Google Docs Template</strong> di Google Drive Anda (isikan placeholder seperti <code class="bg-white px-1 py-0.5 rounded border">{{nama}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{jk}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{tempat_lahir}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{agama}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{kewarganegaraan}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{anak_ke}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{bahasa}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{alamat}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{hp}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{sekolah_asal}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{alamat_sekolah_asal}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{nama_ayah}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{nama_ibu}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{alamat_ortu}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{pekerjaan_ayah}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{pekerjaan_ibu}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{penghasilan_ayah}}</code>, <code class="bg-white px-1 py-0.5 rounded border">{{penghasilan_ibu}}</code>).</li>
-                        <li>Salin <strong>ID Template Dokumen</strong> dan <strong>ID Folder Google Drive</strong> Anda.</li>
-                        <li>Buka proyek <strong>Google Apps Script</strong> di <a href="https://script.google.com" target="_blank" class="text-blue-600 underline font-bold">script.google.com</a> dan ganti kode dengan skrip di bawah ini.</li>
-                        <li>Deploy ulang Web App dengan akses <code class="text-blue-900 font-bold">Anyone</code>.</li>
-                    </ol>
-
-                    <div class="mt-4 pt-3 border-t border-blue-200">
-                        <span class="block font-bold text-slate-900 text-xs sm:text-sm mb-1.5">Kode Google Apps Script Terbaru (`Code.gs`):</span>
-                        <div class="relative">
-                            <textarea readonly rows="12" class="w-full bg-slate-900 text-emerald-400 text-xs font-mono p-3 rounded-lg select-all focus:outline-none" onclick="this.select()">
-function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    var folderId = "MASUKKAN_ID_FOLDER_GOOGLE_DRIVE_ANDA_DISINI";
-    var templateId = "MASUKKAN_ID_GOOGLE_DOCS_TEMPLATE_ANDA_DISINI";
-    
-    var folder = DriveApp.getFolderById(folderId);
-    
-    // 1. Simpan file bukti transfer ke Google Drive jika ada
-    var fileTransferUrl = "-";
-    if (data.fileTransfer) {
-      var parts = data.fileTransfer.split(",");
-      var contentType = parts[0].match(/:(.*?);/)[1];
-      var decodedData = Utilities.base64Decode(parts[1]);
-      var blob = Utilities.newBlob(decodedData, contentType, data.noReg + "_" + data.nama.replace(/\s+/g, "_") + "_BuktiTransfer");
-      var file = folder.createFile(blob);
-      fileTransferUrl = file.getUrl();
-    }
-    
-    // 2. Buat Salinan Dokumen Formulir Berdasarkan Template & Isi Otomatis
-    var docFile = DriveApp.getFileById(templateId).makeCopy(data.nama + " - Formulir Pendaftaran", folder);
-    var docId = docFile.getId();
-    var doc = DocumentApp.openById(docId);
-    var body = doc.getBody();
-    
-    // Ganti placeholder dengan data pendaftar secara aman
-    for (var key in data) {
-      if (data.hasOwnProperty(key) && key !== 'fileTransfer') {
-        var val = data[key] ? data[key].toString() : "";
-        body.replaceText("{{" + key + "}}", val);
-      }
-    }
-    doc.saveAndClose();
-    
-    // 3. Konversi Dokumen ke PDF di dalam Folder yang sama
-    var pdfBlob = docFile.getAs("application/pdf");
-    pdfBlob.setName(data.nama + " - Formulir Pendaftaran.pdf");
-    var pdfFile = folder.createFile(pdfBlob);
-    var formPdfUrl = pdfFile.getUrl();
-    
-    // 4. Masukkan baris data ke Google Sheets
-    sheet.appendRow([
-      new Date(),
-      data.noReg,
-      data.nama,
-      data.jk,
-      data.tempat_lahir,
-      data.agama,
-      data.kewarganegaraan,
-      data.anak_ke,
-      data.bahasa,
-      data.alamat,
-      data.hp,
-      data.sekolah_asal,
-      data.alamat_sekolah_asal,
-      data.nama_ayah,
-      data.nama_ibu,
-      data.alamat_ortu,
-      data.pekerjaan_ayah,
-      data.pekerjaan_ibu,
-      data.penghasilan_ayah,
-      data.penghasilan_ibu,
-      fileTransferUrl,
-      formPdfUrl
-    ]);
-    
-    return ContentService.createTextOutput(JSON.stringify({"status":"success", "pdfUrl": formPdfUrl})).setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({"status":"error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-                            </textarea>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Persyaratan Dokumen & Pengambilan Kartu -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
                     <h5 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
                         <i class="fa-solid fa-file-signature text-blue-800"></i>
-                        Penandatanganan Dokumen Pendaftaran & Pengambilan Kartu Peserta Seleksi
+                        Penandatanganan Dokumen Pendaftaran
                     </h5>
                     <p class="text-xs sm:text-sm text-slate-600">
                         Setelah menyelesaikan pendaftaran online, calon siswa beserta orang tua/wali datang ke sekolah untuk melakukan penandatanganan dokumen pendaftaran. Formulir pendaftaran akan disediakan dan dicetak langsung oleh pihak sekolah. Untuk mengambil Kartu Tanda Peserta Seleksi harap membawa dokumen pendukung :
@@ -472,7 +373,7 @@ function doPost(e) {
                     </ol>
                     <div class="mt-3 bg-amber-100/80 border-l-4 border-amber-500 p-2.5 text-xs sm:text-sm font-semibold text-amber-900 rounded-r">
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                        Datang Langsung ke Sekolah (ruang TU) Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
+                        Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
                     </div>
                 </div>
 
