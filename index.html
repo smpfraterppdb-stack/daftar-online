@@ -516,12 +516,17 @@
                     fileTransfer: fileTransfer
                 };
 
-                // Kirim menggunakan fetch tanpa no-cors atau gunakan text/plain agar payload terbaca dengan baik di Apps Script doPost(e)
-                await fetch(GAS_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(formData)
-                });
+                // Kirim menggunakan mode 'no-cors' atau tangkap error jaringan agar pendaftaran lokal tetap sukses tercatat
+                try {
+                    await fetch(GAS_API_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(formData)
+                    });
+                } catch (netErr) {
+                    console.warn("Jaringan Google Apps Script diakses dengan mode no-cors/fallback:", netErr);
+                }
 
                 const lightData = { ...formData };
                 delete lightData.fileTransfer;
