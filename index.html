@@ -469,7 +469,16 @@
 
             try {
                 const fileTransferElement = document.getElementById('fileTransfer');
-                const fileTransfer = fileTransferElement && fileTransferElement.files[0] ? await readFileAsBase64(fileTransferElement.files[0]) : null;
+                let fileTransfer = null;
+                
+                if (fileTransferElement && fileTransferElement.files[0]) {
+                    const rawFile = fileTransferElement.files[0];
+                    // Validasi ukuran file maks 5MB
+                    if (rawFile.size > 5 * 1024 * 1024) {
+                        throw new Error("Ukuran file bukti transfer terlalu besar (Maksimal 5MB).");
+                    }
+                    fileTransfer = await readFileAsBase64(rawFile);
+                }
 
                 let currentCounter = parseInt(localStorage.getItem('spmb_seq_counter') || '0', 10);
                 if (currentCounter < submittedRecords.length) {
@@ -503,17 +512,16 @@
                     pekerjaan_ibu: document.getElementById('pekerjaan_ibu').value.trim(),
                     penghasilan_ayah: document.getElementById('penghasilan_ayah').value.trim(),
                     penghasilan_ibu: document.getElementById('penghasilan_ibu').value.trim(),
-                    tanggal_daftar: new Date().toLocaleDateString('id-ID'),
+                    tanggal_daftar: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
                     fileTransfer: fileTransfer
                 };
 
-                // Kirim data ke Google Apps Script secara asinkron
-                fetch(GAS_API_URL, {
+                // Kirim menggunakan fetch tanpa no-cors atau gunakan text/plain agar payload terbaca dengan baik di Apps Script doPost(e)
+                await fetch(GAS_API_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(formData)
-                }).catch(e => console.log('Background sync to GAS error:', e));
+                });
 
                 const lightData = { ...formData };
                 delete lightData.fileTransfer;
@@ -531,7 +539,7 @@
                 document.getElementById('res-sekolah').innerText = sekolahAsal;
                 document.getElementById('res-jk').innerText = jenisKelamin;
 
-                showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!`, 'success');
+                showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil Dikirim!`, 'success');
                 
                 // Reset form
                 document.getElementById('spmb-form').reset();
@@ -540,7 +548,8 @@
                 switchTab('hasil');
 
             } catch (err) {
-                showToast('Terjadi kesalahan: ' + err.message, 'error');
+                showToast('Gagal mengirim pendaftaran: ' + err.message, 'error');
+                console.error(err);
             } finally {
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
