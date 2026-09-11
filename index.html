@@ -353,7 +353,7 @@
         <section id="tab-informasi" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8 max-w-4xl mx-auto space-y-6">
                 <div class="text-center border-b pb-4">
-                    <h2 class="text-2xl font-bold text-blue-950">INFORMASI PENGAMBILAN KARTU TANDA PESERTA SELEKSI CALON MURID BARU</h2>
+                    <h2 class="text-2xl font-bold text-blue-950">INFORMASI & KETENTUAN PENDAFTARAN</h2>
                     <p class="text-xs sm:text-sm text-slate-500 mt-1">SMP FRATER MAMASA - TAHUN PELAJARAN 2027/2028</p>
                 </div>
 
@@ -382,8 +382,8 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
-    var folderId = "1dJVlX6xYOHUc2H5TsP9A7Z_rgSF9xiEY";
-    var templateId = "1GrTCFV0pdszmc1YenSbQLJ_5XpRAWjFSm2MIHKPhBlE";
+    var folderId = "MASUKKAN_ID_FOLDER_GOOGLE_DRIVE_ANDA_DISINI";
+    var templateId = "MASUKKAN_ID_GOOGLE_DOCS_TEMPLATE_ANDA_DISINI";
     
     var folder = DriveApp.getFolderById(folderId);
     
@@ -404,10 +404,11 @@ function doPost(e) {
     var doc = DocumentApp.openById(docId);
     var body = doc.getBody();
     
-    // Ganti placeholder dengan data pendaftar
+    // Ganti placeholder dengan data pendaftar secara aman
     for (var key in data) {
       if (data.hasOwnProperty(key) && key !== 'fileTransfer') {
-        body.replaceText "{{" + key + "}}", data[key] ? data[key].toString() : "";
+        var val = data[key] ? data[key].toString() : "";
+        body.replaceText("{{" + key + "}}", val);
       }
     }
     doc.saveAndClose();
@@ -417,9 +418,6 @@ function doPost(e) {
     pdfBlob.setName(data.nama + " - Formulir Pendaftaran.pdf");
     var pdfFile = folder.createFile(pdfBlob);
     var formPdfUrl = pdfFile.getUrl();
-    
-    // Opsional: Hapus salinan Google Doc mentah jika hanya ingin PDF-nya saja (biarkan baris di bawah jika ingin tetap menyimpannya)
-    // docFile.setTrashed(true);
     
     // 4. Masukkan baris data ke Google Sheets
     sheet.appendRow([
@@ -461,7 +459,7 @@ function doPost(e) {
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
                     <h5 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
                         <i class="fa-solid fa-file-signature text-blue-800"></i>
-                        Penandatanganan Dokumen Pendaftaran
+                        Penandatanganan Dokumen Pendaftaran & Pengambilan Kartu Peserta Seleksi
                     </h5>
                     <p class="text-xs sm:text-sm text-slate-600">
                         Setelah menyelesaikan pendaftaran online, calon siswa beserta orang tua/wali datang ke sekolah untuk melakukan penandatanganan dokumen pendaftaran. Formulir pendaftaran akan disediakan dan dicetak langsung oleh pihak sekolah. Untuk mengambil Kartu Tanda Peserta Seleksi harap membawa dokumen pendukung :
@@ -474,7 +472,7 @@ function doPost(e) {
                     </ol>
                     <div class="mt-3 bg-amber-100/80 border-l-4 border-amber-500 p-2.5 text-xs sm:text-sm font-semibold text-amber-900 rounded-r">
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                        Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
+                        Datang Langsung ke Sekolah (ruang TU) Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
                     </div>
                 </div>
 
@@ -515,7 +513,7 @@ function doPost(e) {
 
     <script>
         // Link Apps Script otomatis
-        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxZ6xyEzdYzTfqgJrOq_hIO9raoJ-6bT7v1yCEgArFTxE87Oe_aOLMcvIx-V1WEutoQ/exec';
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbw4b2mnaPYmxPj32PpWgocNlqIE3KcU-90_OT5ADPh2Ec50gR9UCAJJbNDE8X1K9ODuQg/exec';
         
         let submittedRecords = [];
         try {
