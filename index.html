@@ -242,6 +242,65 @@
             </div>
         </section>
 
+        <!-- TAB: HASIL INFORMASI PENDAFTARAN (OTOMATIS MUNCUL) -->
+        <section id="tab-hasil" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-xl border border-blue-100 p-6 sm:p-10 max-w-xl mx-auto space-y-6">
+                <div class="text-center border-b pb-4">
+                    <h3 class="text-lg font-bold text-blue-950">SMP FRATER MAMASA</h3>
+                    <p class="text-xs uppercase tracking-wider text-slate-500 font-semibold mt-0.5">INFORMASI PENDAFTARAN MURID BARU</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 space-y-4">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Status Pendaftaran</span>
+                        <div class="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Terdaftar</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">No. Registrasi</span>
+                        <div class="bg-white border border-slate-300 px-3.5 py-2 rounded-lg font-mono font-bold text-blue-950 text-base shadow-sm inline-block" id="res-no-reg">
+                            REG-ONLINE-001
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Nama Siswa Mendaftar</span>
+                        <div class="text-lg font-bold text-slate-900" id="res-nama">
+                            Nama Siswa
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Asal Sekolah</span>
+                        <div class="text-sm font-semibold text-slate-800" id="res-sekolah">
+                            SDN 001 Mamasa
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Jenis Kelamin</span>
+                        <div class="text-sm font-semibold text-slate-800" id="res-jk">
+                            Laki-laki
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button onclick="window.print()" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 no-print">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak / Unduh Bukti</span>
+                    </button>
+                    <button onclick="switchTab('beranda')" class="flex-1 bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Kembali ke Beranda</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- TAB: JADWAL SELEKSI -->
         <section id="tab-jadwal" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8 max-w-4xl mx-auto space-y-6">
@@ -356,7 +415,7 @@
 
     <script>
         // Link Apps Script otomatis
-        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxZ6xyEzdYzTfqgJrOq_hIO9raoJ-6bT7v1yCEgArFTzjxE87Oe_aOLMcvIx-V1WEutoQ/exec';
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxZ6xyEzdYzTfqgJrOq_hIO9raoJ-6bT7v1yCEgArFTxE87Oe_aOLMcvIx-V1WEutoQ/exec';
         
         let submittedRecords = [];
         try {
@@ -421,11 +480,13 @@
 
                 const noReg = 'REG-ONLINE-' + String(currentCounter).padStart(3, '0');
                 const namaLengkap = document.getElementById('nama').value.trim();
+                const sekolahAsal = document.getElementById('sekolah_asal').value.trim();
+                const jenisKelamin = document.getElementById('jk').value;
 
                 const formData = {
                     noReg: noReg,
                     nama: namaLengkap,
-                    jk: document.getElementById('jk').value,
+                    jk: jenisKelamin,
                     tempat_lahir: document.getElementById('tempat_lahir').value.trim(),
                     agama: document.getElementById('agama').value,
                     kewarganegaraan: document.getElementById('kewarganegaraan').value.trim(),
@@ -433,7 +494,7 @@
                     bahasa: document.getElementById('bahasa').value.trim(),
                     alamat: document.getElementById('alamat').value.trim(),
                     hp: document.getElementById('hp').value.trim(),
-                    sekolah_asal: document.getElementById('sekolah_asal').value.trim(),
+                    sekolah_asal: sekolahAsal,
                     alamat_sekolah_asal: document.getElementById('alamat_sekolah_asal').value.trim(),
                     nama_ayah: document.getElementById('nama_ayah').value.trim(),
                     nama_ibu: document.getElementById('nama_ibu').value.trim(),
@@ -446,12 +507,13 @@
                     fileTransfer: fileTransfer
                 };
 
-                await fetch(GAS_API_URL, {
+                // Kirim data ke Google Apps Script secara asinkron
+                fetch(GAS_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
-                });
+                }).catch(e => console.log('Background sync to GAS error:', e));
 
                 const lightData = { ...formData };
                 delete lightData.fileTransfer;
@@ -460,20 +522,29 @@
                 try {
                     localStorage.setItem('spmb_records', JSON.stringify(submittedRecords));
                 } catch (storageErr) {
-                    console.warn('Storage penuh, namun pengiriman ke Google Drive tetap diproses.');
+                    console.warn('Storage penuh.');
                 }
 
-                showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!\nFile otomatis tersimpan di Google Drive.`, 'success');
+                // Masukkan data ke tampilan hasil pendaftaran
+                document.getElementById('res-no-reg').innerText = noReg;
+                document.getElementById('res-nama').innerText = namaLengkap;
+                document.getElementById('res-sekolah').innerText = sekolahAsal;
+                document.getElementById('res-jk').innerText = jenisKelamin;
+
+                showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!`, 'success');
                 
+                // Reset form
                 document.getElementById('spmb-form').reset();
-                switchTab('beranda');
+
+                // Pindah secara otomatis ke tab hasil pendaftaran
+                switchTab('hasil');
 
             } catch (err) {
                 showToast('Terjadi kesalahan: ' + err.message, 'error');
             } finally {
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"><span>Kirim Pendaftaran</span>`;
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Pendaftaran</span>`;
                 }
             }
         }
