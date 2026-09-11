@@ -41,7 +41,7 @@
                 <button onclick="switchTab('beranda')" class="nav-btn text-amber-400 font-bold hover:text-amber-300 transition" id="nav-beranda">Beranda</button>
                 <button onclick="switchTab('pendaftaran')" class="nav-btn hover:text-amber-400 transition" id="nav-pendaftaran">Form Pendaftaran</button>
                 <button onclick="switchTab('jadwal')" class="nav-btn hover:text-amber-400 transition" id="nav-jadwal">Jadwal Seleksi</button>
-                <button onclick="switchTab('cek-status')" class="nav-btn hover:text-amber-400 transition" id="nav-cek-status">Informasi</button>
+                <button onclick="switchTab('informasi')" class="nav-btn hover:text-amber-400 transition" id="nav-informasi">Informasi</button>
             </nav>
 
             <button onclick="toggleMobileMenu()" class="md:hidden text-2xl focus:outline-none" aria-label="Toggle Navigation">
@@ -54,7 +54,7 @@
             <button onclick="switchTab('beranda'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Beranda</button>
             <button onclick="switchTab('pendaftaran'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Form Pendaftaran</button>
             <button onclick="switchTab('jadwal'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Jadwal Seleksi</button>
-            <button onclick="switchTab('cek-status'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Informasi</button>
+            <button onclick="switchTab('informasi'); toggleMobileMenu();" class="block w-full text-left py-2 hover:text-amber-400">Informasi</button>
         </div>
     </header>
 
@@ -76,7 +76,8 @@
                         <button onclick="switchTab('pendaftaran')" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold px-6 py-3 rounded-lg shadow-lg transition flex items-center space-x-2">
                             <span>Mulai Pendaftaran</span>
                             <i class="fa-solid fa-arrow-right"></i>
-                       </div>
+                        </button>
+                    </div>
                 </div>
                 <i class="fa-solid fa-graduation-cap absolute -right-10 -bottom-10 text-white/5 text-[220px] pointer-events-none"></i>
             </div>
@@ -249,39 +250,37 @@
                     <p class="text-xs sm:text-sm text-slate-500 mt-1">SMP FRATER MAMASA - TAHUN PELAJARAN 2027/2028</p>
                 </div>
                 <!-- JADWAL SELEKSI & KETENTUAN PENGAMBILAN KARTU -->
-                  <!-- Gelombang 1 & 2 Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Gelombang 1 -->
-                        <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 space-y-2">
-                            <span class="inline-block bg-blue-900 text-white font-bold text-xs px-2.5 py-1 rounded-md">Gelombang 1</span>
-                            <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
-                                <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-pen-to-square text-blue-700 mt-0.5"></i>
-                                    <span><strong>Tes Tulis:</strong> Tgl, 00 Januari 2027 (Seragam SD)</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-comments text-blue-700 mt-0.5"></i>
-                                    <span><strong>Tes Wawancara:</strong> Tgl, 00 Januari 2027 (Pakaian Bebas Rapi, hadir bersama orang tua, membawa Materai 10.000)</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Gelombang 2 -->
-                        <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-2">
-                            <span class="inline-block bg-amber-600 text-white font-bold text-xs px-2.5 py-1 rounded-md">Gelombang 2</span>
-                            <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
-                                <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-pen-to-square text-amber-700 mt-0.5"></i>
-                                    <span><strong>Tes Tulis:</strong> Tgl, 00 Mei 2027 (Seragam SD)</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-comments text-amber-700 mt-0.5"></i>
-                                    <span><strong>Tes Wawancara:</strong> Tgl, 00 Mei 2027 (Pakaian Bebas Rapi, hadir bersama orang tua, membawa Materai 10.000)</span>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Gelombang 1 -->
+                    <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 space-y-2">
+                        <span class="inline-block bg-blue-900 text-white font-bold text-xs px-2.5 py-1 rounded-md">Gelombang 1</span>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-pen-to-square text-blue-700 mt-0.5"></i>
+                                <span><strong>Tes Tulis:</strong> Tgl, 00 Januari 2027 (Seragam SD)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-comments text-blue-700 mt-0.5"></i>
+                                <span><strong>Tes Wawancara:</strong> Tgl, 00 Januari 2027 (Pakaian Bebas Rapi, hadir bersama orang tua, membawa Materai 10.000)</span>
+                            </li>
+                        </ul>
                     </div>
-              </div>
+
+                    <!-- Gelombang 2 -->
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-2">
+                        <span class="inline-block bg-amber-600 text-white font-bold text-xs px-2.5 py-1 rounded-md">Gelombang 2</span>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-pen-to-square text-amber-700 mt-0.5"></i>
+                                <span><strong>Tes Tulis:</strong> Tgl, 00 Mei 2027 (Seragam SD)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-comments text-amber-700 mt-0.5"></i>
+                                <span><strong>Tes Wawancara:</strong> Tgl, 00 Mei 2027 (Pakaian Bebas Rapi, hadir bersama orang tua, membawa Materai 10.000)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="flex justify-center pt-4">
                     <button onclick="switchTab('beranda')" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md transition flex items-center space-x-2">
                            <i class="fa-solid fa-house"></i>
@@ -292,60 +291,61 @@
         </section>
 
         <!-- TAB 3: INFORMASI -->
-          <section id="tab-informasi" class="tab-content hidden space-y-6">
+        <section id="tab-informasi" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8 max-w-4xl mx-auto space-y-6">
                 <div class="text-center border-b pb-4">
-                    <h2 class="text-2xl font-bold text-blue-950">JADWAL SELEKSI PENERIMAAN MURID BARU</h2>
+                    <h2 class="text-2xl font-bold text-blue-950">INFORMASI & KETENTUAN PENDAFTARAN</h2>
                     <p class="text-xs sm:text-sm text-slate-500 mt-1">SMP FRATER MAMASA - TAHUN PELAJARAN 2027/2028</p>
                 </div>
 
-                    <!-- Persyaratan Dokumen & Pengambilan Kartu -->
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
-                        <h5 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
-                            <i class="fa-solid fa-file-signature text-blue-800"></i>
-                            Ketentuan Tanda Tangan Formulir Fisik & Pengambilan Kartu Peserta Seleksi
-                        </h5>
-                        <p class="text-xs sm:text-sm text-slate-600">
-                            Harap membawa berkas fisik berikut untuk melakukan tanda tangan formulir fisik dan mengambil Kartu Tanda Peserta Seleksi:
-                        </p>
-                        <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-700 space-y-1.5 pl-1 font-medium">
-                            <li>Fotocopy Kartu Keluarga (KK) - 1 Lembar</li>
-                            <li>Fotocopy Akte Kelahiran - 1 Lembar</li>
-                            <li>Pas Foto 3x4 - 3 Lembar</li>
-                            <li>Materai 10.000 - 1 Lembar</li>
-                        </ol>
-                        <div class="mt-3 bg-amber-100/80 border-l-4 border-amber-500 p-2.5 text-xs sm:text-sm font-semibold text-amber-900 rounded-r">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                            Datang Langsung ke Sekolah (ruang TU) Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
-                        </div>
+                <!-- Persyaratan Dokumen & Pengambilan Kartu -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
+                    <h5 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-file-signature text-blue-800"></i>
+                        Ketentuan Tanda Tangan Formulir Fisik & Pengambilan Kartu Peserta Seleksi
+                    </h5>
+                    <p class="text-xs sm:text-sm text-slate-600">
+                        Harap membawa berkas fisik berikut untuk melakukan tanda tangan formulir fisik dan mengambil Kartu Tanda Peserta Seleksi:
+                    </p>
+                    <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-700 space-y-1.5 pl-1 font-medium">
+                        <li>Fotocopy Kartu Keluarga (KK) - 1 Lembar</li>
+                        <li>Fotocopy Akte Kelahiran - 1 Lembar</li>
+                        <li>Pas Foto 3x4 - 3 Lembar</li>
+                        <li>Materai 10.000 - 1 Lembar</li>
+                    </ol>
+                    <div class="mt-3 bg-amber-100/80 border-l-4 border-amber-500 p-2.5 text-xs sm:text-sm font-semibold text-amber-900 rounded-r">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                        Datang Langsung ke Sekolah (ruang TU) Paling lambat <strong>2 (dua) hari</strong> sebelum tanggal seleksi dilaksanakan.
                     </div>
+                </div>
 
-                    <!-- Contact Person Panitia -->
-                    <div class="bg-emerald-50/80 border border-emerald-200 rounded-xl p-4 text-xs sm:text-sm text-slate-800">
-                        <span class="font-bold text-emerald-900 block mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-headset text-emerald-700"></i>
-                            Kontak Panitia Pendaftaran (Info Lebih Lanjut):
-                        </span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <a href="https://wa.me/6285233922001" target="_blank" class="flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-lg border border-emerald-300 hover:bg-emerald-100 transition font-medium text-emerald-950">
-                                <i class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
-                                <span>0853 9799 0497 (Ibu Serly)</span>
-                            </a>
-                            <a href="https://wa.me/6281223000111" target="_blank" class="flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-lg border border-emerald-300 hover:bg-emerald-100 transition font-medium text-emerald-950">
-                                <i class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
-                                <span>0822 9001 4009 (Pak Markus)</span>
-                            </a>
-                        </div>
+                <!-- Contact Person Panitia -->
+                <div class="bg-emerald-50/80 border border-emerald-200 rounded-xl p-4 text-xs sm:text-sm text-slate-800">
+                    <span class="font-bold text-emerald-900 block mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-headset text-emerald-700"></i>
+                        Kontak Panitia Pendaftaran (Info Lebih Lanjut):
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <a href="https://wa.me/6285233922001" target="_blank" class="flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-lg border border-emerald-300 hover:bg-emerald-100 transition font-medium text-emerald-950">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
+                            <span>0853 9799 0497 (Ibu Serly)</span>
+                        </a>
+                        <a href="https://wa.me/6281223000111" target="_blank" class="flex items-center gap-2 bg-white px-3.5 py-2.5 rounded-lg border border-emerald-300 hover:bg-emerald-100 transition font-medium text-emerald-950">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
+                            <span>0822 9001 4009 (Pak Markus)</span>
+                        </a>
                     </div>
                 </div>
-                 <!-- Tombol Navigasi Kembali ke Beranda -->
+
+                <!-- Tombol Navigasi Kembali ke Beranda -->
                 <div class="flex justify-center pt-4">
-                        <button onclick="switchTab('beranda')" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md transition flex items-center space-x-2">
-                           <i class="fa-solid fa-house"></i>
-                           <span>Kembali ke Beranda</span>
-                        </button>
+                    <button onclick="switchTab('beranda')" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md transition flex items-center space-x-2">
+                       <i class="fa-solid fa-house"></i>
+                       <span>Kembali ke Beranda</span>
+                    </button>
                 </div>
-          </section>
+            </div>
+        </section>
     </main>
 
     <footer class="bg-slate-900 text-slate-400 text-xs py-6 text-center no-print mt-auto">
@@ -379,12 +379,6 @@
                 targetNav.classList.add('text-amber-400', 'font-bold');
             }
 
-            // Pastikan hasil pendaftaran tersembunyi sebelum pengguna melakukan pencarian
-            if (tabId === 'cek-status') {
-                const hasilCard = document.getElementById('hasil-pendaftaran');
-                if (hasilCard) hasilCard.classList.add('hidden');
-            }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -415,7 +409,6 @@
             }
 
             try {
-                // Ambil file upload dalam bentuk Base64
                 const fileTransferElement = document.getElementById('fileTransfer');
                 const fileTransfer = fileTransferElement && fileTransferElement.files[0] ? await readFileAsBase64(fileTransferElement.files[0]) : null;
 
@@ -453,7 +446,6 @@
                     fileTransfer: fileTransfer
                 };
 
-                // Kirim ke Google Apps Script (menggunakan mode no-cors)
                 await fetch(GAS_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -461,7 +453,6 @@
                     body: JSON.stringify(formData)
                 });
 
-                // Simpan data teks saja ke LocalStorage agar aman dari batas kuota memori
                 const lightData = { ...formData };
                 delete lightData.fileTransfer;
 
@@ -474,10 +465,7 @@
 
                 showToast(`Pendaftaran atas nama ${namaLengkap} Berhasil!\nFile otomatis tersimpan di Google Drive.`, 'success');
                 
-                // Reset form setelah sukses
                 document.getElementById('spmb-form').reset();
-
-                // Kembali ke beranda tanpa membuka menu/kartu status pendaftaran
                 switchTab('beranda');
 
             } catch (err) {
@@ -485,44 +473,8 @@
             } finally {
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Pendaftaran</span>`;
+                    btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane"><span>Kirim Pendaftaran</span>`;
                 }
-            }
-        }
-
-        function tampilkanKartuBukti(data) {
-            document.getElementById('card-reg').innerText = data.noReg || '-';
-            document.getElementById('card-nama').innerText = data.nama || '-';
-            document.getElementById('card-sekolah').innerText = data.sekolah_asal || '-';
-            document.getElementById('card-jk').innerText = data.jk || '-';
-            
-            document.getElementById('hasil-pendaftaran').classList.remove('hidden');
-        }
-
-        function cariPendaftaran() {
-            const searchNamaEl = document.getElementById('searchNama');
-            const searchTglLahirEl = document.getElementById('searchTglLahir');
-
-            const searchNama = searchNamaEl ? searchNamaEl.value.trim().toLowerCase() : '';
-            const searchTglLahir = searchTglLahirEl ? searchTglLahirEl.value.trim().toLowerCase() : '';
-
-            if (!searchNama || !searchTglLahir) {
-                showToast('Harap masukkan Nama Lengkap dan Tempat Lahir.', 'error');
-                return;
-            }
-
-            const found = submittedRecords.find(r => {
-                const matchNama = r.nama && r.nama.toLowerCase().includes(searchNama);
-                const matchTempat = r.tempat_lahir && r.tempat_lahir.toLowerCase().includes(searchTglLahir);
-                return matchNama && matchTempat;
-            });
-
-            if (found) {
-                tampilkanKartuBukti(found);
-                showToast('Data pendaftaran ditemukan!', 'success');
-            } else {
-                document.getElementById('hasil-pendaftaran').classList.add('hidden');
-                showToast('Data pendaftaran tidak ditemukan. Pastikan Nama Lengkap dan Tempat Lahir sudah sesuai.', 'error');
             }
         }
 
